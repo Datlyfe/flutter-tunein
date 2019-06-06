@@ -1,3 +1,3 @@
 # flutter-tunein
 
-Flutter trainning projet
+Flutter training projet XD
