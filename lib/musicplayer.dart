@@ -7,7 +7,7 @@ import 'home.dart';
 import 'package:random_color/random_color.dart';
 import 'package:flutter/services.dart';
 
-String img = "images/noimage.png";
+String img = "images/placeholder.png";
 // for playlists, play queue
 List queueFileList;
 int currTrack;
@@ -103,15 +103,15 @@ Future stop() async {
   await audioPlayer.stop();
 }
 
-getImage(imageHash, context) {
+getImage(imageHash) {
   if (imageHash != null) {
     var imageData = appPath + "/" + imageHash;
     return Image.asset(
       imageData,
-      width: MediaQuery.of(context).size.width / 7,
+      width: 40,
     );
   } else {
-    return Image.asset(img, width: MediaQuery.of(context).size.width / 7);
+    return Image.asset(img, width: 40);
   }
 }
 

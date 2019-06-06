@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'components/button.dart';
 import 'components/appbar.dart';
 import 'globals.dart';
+import 'components/card.dart';
+import 'package:music/musicplayer.dart' as musicplayer;
 
 class Home extends StatelessWidget {
+  void log() {
+    print(musicplayer.allFilePaths.length);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,8 +64,8 @@ class Home extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               // mainAxisSize: ,
               children: <Widget>[
-                new MyFlatButton(0xeb10, "Play"),
-                new MyFlatButton(Icons.shuffle, "Shuffle", false)
+                new MyFlatButton(0xeb10, "Play", this.log),
+                new MyFlatButton(Icons.shuffle, "Shuffle", () => {}, false)
               ],
             ),
             new LayoutBuilder(
@@ -72,9 +79,28 @@ class Home extends StatelessWidget {
                 ),
               );
             }),
+            Expanded(
+              child: getSongListView(),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+Widget getSongListView() {
+  var items = musicplayer.allMetaData;
+
+  var listView = ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        var i = items[index];
+        var image =
+            (i[2] != null) ? musicplayer.appPath + "/" + i[2] : musicplayer.img;
+        return new MyCard(i[0], i[1], image);
+      });
+
+  return listView;
 }

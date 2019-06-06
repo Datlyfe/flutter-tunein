@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music/components/songList.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +9,7 @@ import 'musicplayer.dart' as musicplayer;
 import 'home.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'globals.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -198,8 +200,8 @@ class SplashScreenState extends State<SplashScreen> {
   }
 
   onDoneLoading() async {
-    // Navigator.of(context)
-    //     .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
   }
 
   @override
@@ -218,32 +220,50 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: MyTheme.bgBottomBar,
         child: Center(
-            child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Image.asset("images/logo.png"),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+          child: Container(
+              margin: EdgeInsets.all(20.0),
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Image.asset(
+                      "images/logo5.png",
+                      width: 175,
+                    ),
+                    Text(
+                      "Musicly",
+                      style: TextStyle(
+                        fontFamily: 'pacifico',
+                        color: Colors.white,
+                        fontSize: 40,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(MyTheme.darkRed),
+                      ),
+                    ),
+                    // Container(
+                    //   width: 800.0,
+                    //   height: 100.0,
+                    //   child: Center(
+                    //     child: Text(
+                    //         "Loading track: $loadingTrack $loadingTrackNumber"),
+                    //   ),
+                    // ),
+                    // LinearProgressIndicator(
+                    //   value: loadingTrackNumber,
+                    // ),
+                  ],
                 ),
-              ),
-              Container(
-                width: 800.0,
-                height: 100.0,
-                child: Center(
-                  child: Text("Loading track: $loadingTrack $loadingTrackNumber"),
-                ),
-              ),
-              LinearProgressIndicator(
-                value: loadingTrackNumber,
-              ),
-            ],
-          ),
-        )),
+              )),
+        ),
       ),
     );
   }
