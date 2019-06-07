@@ -14,21 +14,21 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             icon: Icon(
               IconData(0xea49, fontFamily: 'Boxicons'),
-              size: 30,
-              color: MyTheme.darkRed,
+              size: 25,
+              color: Colors.white54,
             ),
             onPressed: () => {},
           ),
           Text(
             "Songs",
             style: TextStyle(
-                fontWeight: FontWeight.w600, color: Colors.white, fontSize: 24),
+                fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),
           ),
           IconButton(
             icon: Icon(
               IconData(0xeaeb, fontFamily: 'Boxicons'),
-              size: 30,
-              color: MyTheme.darkRed,
+              size: 25,
+              color: Colors.white54,
             ),
             onPressed: () => {},
           ),

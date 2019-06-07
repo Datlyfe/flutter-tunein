@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Raleway',
+        // fontFamily: 'Raleway',
         textTheme: TextTheme(body1: TextStyle(color: Colors.black)),
       ),
       home: GetPermissions(),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music/components/songList.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
@@ -201,7 +200,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   onDoneLoading() async {
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   @override

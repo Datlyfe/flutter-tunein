@@ -57,6 +57,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  draggable_scrollbar:
+    dependency: "direct dev"
+    description:
+      name: draggable_scrollbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -123,6 +130,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.3"
+  side_header_list_view:
+    dependency: "direct dev"
+    description:
+      name: side_header_list_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   simple_permissions:
     dependency: "direct dev"
     description:

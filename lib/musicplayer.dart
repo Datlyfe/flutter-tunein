@@ -129,7 +129,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               onPlayingPage = false;
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) => Home()));
+                  MaterialPageRoute(builder: (BuildContext context) => HomePage()));
             },
           ),
         ],

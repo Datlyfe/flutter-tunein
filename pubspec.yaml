@@ -33,6 +33,9 @@ dev_dependencies:
   audioplayer: ^0.5.2
   shared_preferences: ^0.4.3
   random_color: ^1.0.3
+  draggable_scrollbar: ^0.0.4
+  side_header_list_view: ^0.0.4
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -5,12 +5,15 @@ import 'components/appbar.dart';
 import 'globals.dart';
 import 'components/card.dart';
 import 'package:music/musicplayer.dart' as musicplayer;
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'dart:async';
+import 'dart:math' as math;
 
-class Home extends StatelessWidget {
-  void log() {
-    print(musicplayer.allFilePaths.length);
-  }
+class HomePage extends StatefulWidget {
+  HomePageState createState() => HomePageState();
+}
 
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +23,7 @@ class Home extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         selectedItemColor: MyTheme.darkRed,
-        unselectedItemColor: MyTheme.darkgrey,
+        unselectedItemColor: Colors.white54,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
@@ -60,27 +63,41 @@ class Home extends StatelessWidget {
         color: MyTheme.darkBlack,
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisSize: ,
-              children: <Widget>[
-                new MyFlatButton(0xeb10, "Play", this.log),
-                new MyFlatButton(Icons.shuffle, "Shuffle", () => {}, false)
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    cursorColor: Colors.white,
+                    enabled: false,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600),
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                          color: Colors.white30,
+                        ),
+                        icon: Icon(
+                          IconData(0xeb2e, fontFamily: "Boxicons"),
+                          color: Colors.white30,
+                          size: 20,
+                        ),
+                        border: InputBorder.none,
+                        hintText: 'Track, Album, Artsit'),
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                    child: Divider(
+                      height: 2.0,
+                      color: MyTheme.bgdivider,
+                    ),
+                  )
+                ],
+              ),
             ),
-            new LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-              return SizedBox(
-                height: 30.0,
-                width: constraints.maxWidth - 40,
-                child: Divider(
-                  height: 2.0,
-                  color: MyTheme.bgdivider,
-                ),
-              );
-            }),
             Expanded(
-              child: getSongListView(),
+              child: getSongListView(context),
             ),
           ],
         ),
@@ -89,18 +106,29 @@ class Home extends StatelessWidget {
   }
 }
 
-Widget getSongListView() {
+Widget getSongListView(context) {
   var items = musicplayer.allMetaData;
+  items.sort((a, b) {
+    return a[0].toLowerCase().compareTo(b[0].toLowerCase());
+  });
+  final myScrollController = ScrollController();
 
   var listView = ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        var i = items[index];
-        var image =
-            (i[2] != null) ? musicplayer.appPath + "/" + i[2] : musicplayer.img;
-        return new MyCard(i[0], i[1], image);
-      });
+    shrinkWrap: true,
+    itemExtent: 70,
+    physics: AlwaysScrollableScrollPhysics(),
+    scrollDirection: Axis.vertical,
+    controller: myScrollController,
+    itemCount: items.length,
+    itemBuilder: (context, index) {
+      var i = items[index];
+      var image =
+          (i[2] != null) ? musicplayer.appPath + "/" + i[2] : musicplayer.img;
+      return MyCard(i[0], i[1], image);
+    },
+  );
 
-  return listView;
+  return Theme(
+      data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
+      child: listView);
 }

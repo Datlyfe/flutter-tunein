@@ -38,12 +38,12 @@ class MyFlatButton extends StatelessWidget {
                   ? Icon(
                       IconData(this.icon, fontFamily: 'Boxicons'),
                       size: 18,
-                      color: MyTheme.darkRed,
+                      color: Colors.white54,
                     )
                   : Icon(
                       this.icon,
                       size: 18,
-                      color: MyTheme.darkRed,
+                      color: Colors.white54,
                     ),
             ),
           ],
