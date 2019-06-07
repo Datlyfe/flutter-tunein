@@ -1,25 +1,48 @@
+import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
+import 'package:music/blocs/global.dart';
+import 'package:music/models/playerstate.dart';
+import 'package:provider/provider.dart';
 import '../globals.dart';
-import '../musicplayer.dart' as musicplayer;
+import 'package:palette_generator/palette_generator.dart';
 
 class MyCard extends StatelessWidget {
-  final image;
-  final String artist;
-  final String title;
+  final Song _song;
+  String _duration;
+  Image image;
+  Color color;
 
-  MyCard(this.title, this.artist, this.image);
+  MyCard({Key key, @required Song song})
+      : _song = song,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      animationDuration: Duration(milliseconds: 1000),
-      color: MyTheme.darkBlack,
-      child: InkWell(
-        onTap: () {
-          
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    final GlobalBloc store = Provider.of<GlobalBloc>(context);
+
+    // _generatePalette(context, this._song.albumArt).then((data) {
+    //   this.color = data.darkVibrantColor.color;
+    // });
+
+    parseDuration();
+    return StreamBuilder(
+      stream: store.musicPlayerBloc.playerState$,
+      builder: (BuildContext context,
+          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        final PlayerState _state = snapshot.data.key;
+        final Song _currentSong = snapshot.data.value;
+        final bool _isSelectedSong = _song == _currentSong;
+        return AnimatedContainer(
+          duration: Duration(milliseconds: 250),
+          decoration: BoxDecoration(
+            color: (_isSelectedSong)
+                ? MyTheme.darkRed.withOpacity(0.7)
+                : MyTheme.darkBlack,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -32,7 +55,7 @@ class MyCard extends StatelessWidget {
                         child: FadeInImage(
                           fadeInDuration: Duration(milliseconds: 50),
                           fadeOutDuration: Duration(milliseconds: 50),
-                          image: AssetImage(this.image),
+                          image: AssetImage(_song.albumArt),
                           placeholder: AssetImage("images/note.png"),
                           fit: BoxFit.fitHeight,
                         ),
@@ -48,7 +71,7 @@ class MyCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              (this.title != null) ? this.title : "Unknown",
+                              _song.title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 12,
@@ -58,7 +81,7 @@ class MyCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            (this.artist != null) ? this.title : "Unknown Artist",
+                            _song.artist,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 12,
@@ -72,18 +95,40 @@ class MyCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  IconData(0xea7c, fontFamily: 'Boxicons'),
-                  // size: 25,
-                  color: Colors.white54,
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Text(
+                  _duration,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
                 ),
-                onPressed: () => {},
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
+  }
+
+  void parseDuration() {
+    final double _temp = _song.duration / 1000;
+    final int _minutes = (_temp / 60).floor();
+    final int _seconds = (((_temp / 60) - _minutes) * 60).round();
+    if (_seconds.toString().length != 1) {
+      _duration = _minutes.toString() + ":" + _seconds.toString();
+    } else {
+      _duration = _minutes.toString() + ":0" + _seconds.toString();
+    }
+  }
+
+  Future<PaletteGenerator> _generatePalette(context, String imagePath) async {
+    PaletteGenerator _paletteGenerator =
+        await PaletteGenerator.fromImageProvider(AssetImage(imagePath),
+            maximumColorCount: 10);
+
+    return _paletteGenerator;
   }
 }

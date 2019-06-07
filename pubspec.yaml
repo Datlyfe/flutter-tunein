@@ -27,14 +27,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  path_provider: ^1.1.0
-  simple_permissions: ^0.1.9
-  crypto: ^2.0.6
-  audioplayer: ^0.5.2
-  shared_preferences: ^0.4.3
-  random_color: ^1.0.3
-  draggable_scrollbar: ^0.0.4
-  side_header_list_view: ^0.0.4
+  provider: ^2.0.1+1
+  flute_music_player: ^0.0.6
+  rxdart: ^0.22.0
+  sliding_up_panel: ^0.3.4
+  permission_handler: 2.1.2
+  shared_preferences: ^0.5.3+1
+  palette_generator: ^0.1.1
+
 
 
 # For information on the generic Dart part of this file, see the

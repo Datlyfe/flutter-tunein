@@ -20,9 +20,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () => {},
           ),
           Text(
-            "Songs",
+            "Library",
             style: TextStyle(
-                fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),
+              fontWeight: FontWeight.w600,
+              color: MyTheme.darkRed,
+              fontSize: 20,
+            ),
           ),
           IconButton(
             icon: Icon(

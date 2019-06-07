@@ -1,13 +1,15 @@
+import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'components/button.dart';
+import 'package:music/components/bottomBar.dart';
+import 'package:music/components/playing.dart';
+import 'package:provider/provider.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'blocs/global.dart';
 import 'components/appbar.dart';
 import 'globals.dart';
 import 'components/card.dart';
-import 'package:music/musicplayer.dart' as musicplayer;
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'dart:async';
-import 'dart:math' as math;
+import 'models/playerstate.dart';
 
 class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
@@ -16,119 +18,137 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final GlobalBloc store = Provider.of<GlobalBloc>(context);
     return Scaffold(
       appBar: new MyAppBar(),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: MyTheme.bgBottomBar,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        selectedItemColor: MyTheme.darkRed,
-        unselectedItemColor: Colors.white54,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconData(0xebf0, fontFamily: "Boxicons"),
-            ),
-            title: Text('Library'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconData(0xec7d, fontFamily: "Boxicons"),
-            ),
-            title: Text('For You'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconData(0xecb4, fontFamily: "Boxicons"),
-            ),
-            title: Text('Music'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconData(0xebdf, fontFamily: "Boxicons"),
-            ),
-            title: Text('Radio'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              IconData(0xeb2e, fontFamily: "Boxicons"),
-            ),
-            title: Text('Search'),
-          ),
-        ],
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        // color: Colors.white,
-        color: MyTheme.darkBlack,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    cursorColor: Colors.white,
-                    enabled: false,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600),
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(
-                          color: Colors.white30,
-                        ),
-                        icon: Icon(
-                          IconData(0xeb2e, fontFamily: "Boxicons"),
-                          color: Colors.white30,
-                          size: 20,
-                        ),
-                        border: InputBorder.none,
-                        hintText: 'Track, Album, Artsit'),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                    child: Divider(
-                      height: 2.0,
-                      color: MyTheme.bgdivider,
+      bottomNavigationBar: Bottombar(),
+      body: SlidingUpPanel(
+        panel: NowPlayingScreen(),
+        body: Container(
+          alignment: Alignment.center,
+          color: MyTheme.darkBlack,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      cursorColor: Colors.white,
+                      enabled: false,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600),
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                            color: Colors.white30,
+                          ),
+                          icon: Icon(
+                            IconData(0xeb2e, fontFamily: "Boxicons"),
+                            color: Colors.white30,
+                            size: 20,
+                          ),
+                          border: InputBorder.none,
+                          hintText: 'Track, Album, Artsit'),
                     ),
-                  )
-                ],
+                    SizedBox(
+                      height: 30.0,
+                      child: Divider(
+                        height: 2.0,
+                        color: MyTheme.bgdivider,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: getSongListView(context),
-            ),
-          ],
+              Expanded(
+                child: StreamBuilder(
+                  stream: store.musicPlayerBloc.songs$,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Song>> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container();
+                    }
+                    
+                    final _songs = snapshot.data;
+                    _songs.sort((a, b) {
+                      return a.title
+                          .toLowerCase()
+                          .compareTo(b.title.toLowerCase());
+                    });
+                    return Theme(
+                      data: Theme.of(context)
+                          .copyWith(accentColor: MyTheme.darkRed),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemExtent: 70,
+                        physics: AlwaysScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: _songs.length,
+                        itemBuilder: (context, index) {
+                          return StreamBuilder<MapEntry<PlayerState, Song>>(
+                            stream: store.musicPlayerBloc.playerState$,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<MapEntry<PlayerState, Song>>
+                                    snapshot) {
+                              if (!snapshot.hasData) {
+                                return Container();
+                              }
+                              final PlayerState _state = snapshot.data.key;
+                              final Song _currentSong = snapshot.data.value;
+                              final bool _isSelectedSong =
+                                  _currentSong == _songs[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  store.musicPlayerBloc.updatePlaylist(_songs);
+                                  switch (_state) {
+                                    case PlayerState.playing:
+                                      if (_isSelectedSong) {
+                                        store.musicPlayerBloc
+                                            .pauseMusic(_currentSong);
+                                      } else {
+                                        store.musicPlayerBloc.stopMusic();
+                                        store.musicPlayerBloc.playMusic(
+                                          _songs[index],
+                                        );
+                                      }
+                                      break;
+                                    case PlayerState.paused:
+                                      if (_isSelectedSong) {
+                                        store.musicPlayerBloc
+                                            .playMusic(_songs[index]);
+                                      } else {
+                                        store.musicPlayerBloc.stopMusic();
+                                        store.musicPlayerBloc.playMusic(
+                                          _songs[index],
+                                        );
+                                      }
+                                      break;
+                                    case PlayerState.stopped:
+                                      store.musicPlayerBloc
+                                          .playMusic(_songs[index]);
+                                      break;
+                                    default:
+                                      break;
+                                  }
+                                },
+                                child: MyCard(
+                                  song: _songs[index],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-}
-
-Widget getSongListView(context) {
-  var items = musicplayer.allMetaData;
-  items.sort((a, b) {
-    return a[0].toLowerCase().compareTo(b[0].toLowerCase());
-  });
-  final myScrollController = ScrollController();
-
-  var listView = ListView.builder(
-    shrinkWrap: true,
-    itemExtent: 70,
-    physics: AlwaysScrollableScrollPhysics(),
-    scrollDirection: Axis.vertical,
-    controller: myScrollController,
-    itemCount: items.length,
-    itemBuilder: (context, index) {
-      var i = items[index];
-      var image =
-          (i[2] != null) ? musicplayer.appPath + "/" + i[2] : musicplayer.img;
-      return MyCard(i[0], i[1], image);
-    },
-  );
-
-  return Theme(
-      data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
-      child: listView);
 }
