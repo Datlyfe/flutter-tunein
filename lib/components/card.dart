@@ -36,6 +36,7 @@ class MyCard extends StatelessWidget {
         final Song _currentSong = snapshot.data.value;
         final bool _isSelectedSong = _song == _currentSong;
         return AnimatedContainer(
+          height: 70,
           duration: Duration(milliseconds: 250),
           decoration: BoxDecoration(
             color: (_isSelectedSong)

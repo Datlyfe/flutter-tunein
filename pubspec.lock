@@ -48,6 +48,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_spinkit:
+    dependency: "direct dev"
+    description:
+      name: flutter_spinkit
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -88,20 +95,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  permission_handler:
-    dependency: "direct dev"
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.2"
   provider:
     dependency: "direct dev"
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1+1"
+    version: "3.0.0"
   quiver:
     dependency: transitive
     description:
@@ -123,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.3+1"
+  simple_permissions:
+    dependency: "direct dev"
+    description:
+      name: simple_permissions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.9"
   sky_engine:
     dependency: transitive
     description: flutter

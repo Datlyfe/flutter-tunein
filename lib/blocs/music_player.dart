@@ -192,6 +192,28 @@ class MusicPlayerBloc {
     _prefs.setStringList("favorites", _encodedStrings);
   }
 
+  Future<void> saveFiles() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    final List<Song> _songs = _songs$.value;
+    List<String> _encodedStrings = [];
+    for (Song song in _songs) {
+      _encodedStrings.add(_encodeSongToJson(song));
+    }
+    _prefs.setStringList("songs", _encodedStrings);
+  }
+
+  Future<List<Song>> retrieveFiles() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    List<String> _savedStrings = _prefs.getStringList("songs") ?? [];
+    List<Song> _songs = [];
+    for (String data in _savedStrings) {
+      final Song song = _decodeSongFromJson(data);
+      _songs.add(song);
+    }
+    _songs$.add(_songs);
+    return _songs$.value;
+  }
+
   void retrieveFavorites() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final List<Song> _fetchedSongs = _songs$.value;

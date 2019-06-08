@@ -23,7 +23,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             "Library",
             style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: MyTheme.darkRed,
+              color: Colors.white,
               fontSize: 20,
             ),
           ),

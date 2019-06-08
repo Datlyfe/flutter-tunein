@@ -34,8 +34,10 @@ class HomePageState extends State<HomePage> {
                 child: Column(
                   children: <Widget>[
                     TextField(
+                      onChanged: (value) {
+                        filterSearchResults(value);
+                      },
                       cursorColor: Colors.white,
-                      enabled: false,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 22,
@@ -70,7 +72,7 @@ class HomePageState extends State<HomePage> {
                     if (!snapshot.hasData) {
                       return Container();
                     }
-                    
+
                     final _songs = snapshot.data;
                     _songs.sort((a, b) {
                       return a.title
@@ -150,5 +152,20 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void filterSearchResults(String query) {
+    GlobalBloc store = Provider.of(context);
+    List<Song> _songs = store.musicPlayerBloc.songs$.value;
+    List<Song> dummySearchList = List<Song>();
+    if (query.isNotEmpty) {
+      _songs.forEach((item) {
+        if (item.title.contains(query)) {
+          dummySearchList.add(item);
+        }
+      });
+      store.musicPlayerBloc.songs$.add(dummySearchList);
+      return;
+    }
   }
 }
