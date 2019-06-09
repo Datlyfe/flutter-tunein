@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music/globals.dart';
-import 'package:music/home.dart';
+import 'package:music/root.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
@@ -34,7 +34,7 @@ class GetPermissionsState extends State<GetPermissions> {
 
   onDoneLoading() async {
     Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+        .pushReplacement(MaterialPageRoute(builder: (context) => Root()));
   }
 
   @override
@@ -62,10 +62,10 @@ class GetPermissionsState extends State<GetPermissions> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    // Image.asset(
-                    //   "images/logo5.png",
-                    //   width: 175,
-                    // ),
+                    Image.asset(
+                      "images/logo5.png",
+                      width: 175,
+                    ),
                     Text(
                       "Tunein",
                       style: TextStyle(

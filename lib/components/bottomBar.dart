@@ -6,7 +6,7 @@ class Bottombar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: MyTheme.bgBottomBar,
+      backgroundColor: MyTheme.darkBlack,
       type: BottomNavigationBarType.fixed,
       showUnselectedLabels: true,
       selectedItemColor: MyTheme.darkRed,

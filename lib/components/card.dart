@@ -4,13 +4,10 @@ import 'package:music/blocs/global.dart';
 import 'package:music/models/playerstate.dart';
 import 'package:provider/provider.dart';
 import '../globals.dart';
-import 'package:palette_generator/palette_generator.dart';
 
 class MyCard extends StatelessWidget {
   final Song _song;
   String _duration;
-  Image image;
-  Color color;
 
   MyCard({Key key, @required Song song})
       : _song = song,
@@ -19,10 +16,6 @@ class MyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalBloc store = Provider.of<GlobalBloc>(context);
-
-    // _generatePalette(context, this._song.albumArt).then((data) {
-    //   this.color = data.darkVibrantColor.color;
-    // });
 
     parseDuration();
     return StreamBuilder(
@@ -38,11 +31,11 @@ class MyCard extends StatelessWidget {
         return AnimatedContainer(
           height: 70,
           duration: Duration(milliseconds: 250),
-          decoration: BoxDecoration(
-            color: (_isSelectedSong)
-                ? MyTheme.darkRed.withOpacity(0.7)
-                : MyTheme.darkBlack,
-          ),
+          decoration: _isSelectedSong
+              ? BoxDecoration(
+                  color: MyTheme.darkRed.withOpacity(0.7),
+                )
+              : BoxDecoration(),
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           child: Row(
             children: <Widget>[
@@ -56,8 +49,10 @@ class MyCard extends StatelessWidget {
                         child: FadeInImage(
                           fadeInDuration: Duration(milliseconds: 50),
                           fadeOutDuration: Duration(milliseconds: 50),
-                          image: AssetImage(_song.albumArt),
-                          placeholder: AssetImage("images/note.png"),
+                          image: AssetImage(_song.albumArt != null
+                              ? _song.albumArt
+                              : "images/default_track.png"),
+                          placeholder: AssetImage("images/default_track.png"),
                           fit: BoxFit.fitHeight,
                         ),
                         // child: Text("image"),
@@ -82,7 +77,7 @@ class MyCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            _song.artist,
+                            getArtists(_song.artist),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 12,
@@ -103,7 +98,7 @@ class MyCard extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white70,
                     fontWeight: FontWeight.w600,
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -125,11 +120,9 @@ class MyCard extends StatelessWidget {
     }
   }
 
-  Future<PaletteGenerator> _generatePalette(context, String imagePath) async {
-    PaletteGenerator _paletteGenerator =
-        await PaletteGenerator.fromImageProvider(AssetImage(imagePath),
-            maximumColorCount: 10);
-
-    return _paletteGenerator;
+  String getArtists(artists) {
+    return artists.split(";").reduce((String a, String b) {
+      return a + " & " + b;
+    });
   }
 }

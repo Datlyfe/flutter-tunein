@@ -1,73 +1,103 @@
-import 'dart:ui';
-import 'dart:ui';
-
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:music/blocs/global.dart';
+import 'package:music/components/slider.dart';
+import 'package:music/globals.dart';
 import 'package:music/models/playerstate.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import 'controlls.dart';
 
 class NowPlayingScreen extends StatelessWidget {
-  BehaviorSubject<PaletteGenerator> _palette;
-
   @override
   Widget build(BuildContext context) {
     final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     final double _radius = 25.0;
     final double _screenHeight = MediaQuery.of(context).size.height;
-    final double _albumArtSize = _screenHeight / 1.9;
+    final double _screenWidth = MediaQuery.of(context).size.width;
+
+    final double _albumArtSize = _screenHeight / 2;
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      backgroundColor: MyTheme.darkBlack,
+      body: Stack(
+        fit: StackFit.expand,
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: _albumArtSize + 50,
-            child: Stack(
-              children: <Widget>[
-                StreamBuilder<MapEntry<PlayerState, Song>>(
-                  stream: _globalBloc.musicPlayerBloc.playerState$,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
-                    if (!snapshot.hasData ||
-                        snapshot.data.value.albumArt == null) {
-                      return Text("No album art");
-                    }
+          StreamBuilder<MapEntry<PlayerState, Song>>(
+            stream: _globalBloc.musicPlayerBloc.playerState$,
+            builder: (BuildContext context,
+                AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+              if (!snapshot.hasData || snapshot.data.value.albumArt == null) {
+                return Text("No album art");
+              }
 
-                    final Song _currentSong = snapshot.data.value;
+              final Song _currentSong = snapshot.data.value;
 
-                    // _generatePalette(context, _currentSong.albumArt)
-                    //     .then((data) {
-                    //   _palette.add(data);
-                    // });
-
-                    return StreamBuilder(
-                      stream: _palette,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        // print(snapshot.hasData);
-                        // if (!snapshot.hasData) {
-                        //   return Text("No album art");
-                        // }
-                        return Container(
-                          child: FadeInImage(
-                            fadeInDuration: Duration(milliseconds: 50),
-                            fadeOutDuration: Duration(milliseconds: 50),
-                            image: AssetImage(_currentSong.albumArt),
-                            placeholder: AssetImage("images/note.png"),
-                            width: _albumArtSize,
-                            height: _albumArtSize,
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: new BorderRadius.circular(0),
+                    child: FadeInImage(
+                        fadeInDuration: Duration(milliseconds: 50),
+                        fadeOutDuration: Duration(milliseconds: 50),
+                        image: AssetImage(_currentSong.albumArt),
+                        placeholder: AssetImage("images/note.png"),
+                        width: _albumArtSize),
+                  ),
+                  Container(
+                    width: double.infinity,
+                    height: _screenHeight - _albumArtSize -60,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        NowPlayingSlider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    _currentSong.title,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      _currentSong.artist,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: MyTheme.darkRed.withOpacity(0.7),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        MusicBoardControls(),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -83,13 +113,5 @@ class NowPlayingScreen extends StatelessWidget {
     } else {
       return _minutes.toString() + ":0" + _seconds.toString();
     }
-  }
-
-  Future<PaletteGenerator> _generatePalette(context, String imagePath) async {
-    PaletteGenerator _paletteGenerator =
-        await PaletteGenerator.fromImageProvider(AssetImage(imagePath),
-            maximumColorCount: 10);
-
-    return _paletteGenerator;
   }
 }
