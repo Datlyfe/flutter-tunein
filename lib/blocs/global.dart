@@ -1,7 +1,5 @@
 
-import 'package:music/blocs/music_player.dart';
-import 'package:music/blocs/permissions.dart';
-
+import 'package:Tunein/blocs/music_player.dart';
 class GlobalBloc {
   MusicPlayerBloc _musicPlayerBloc;
   MusicPlayerBloc get musicPlayerBloc => _musicPlayerBloc;

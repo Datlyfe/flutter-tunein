@@ -37,7 +37,7 @@ packages:
     source: hosted
     version: "0.1.2"
   flute_music_player:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flute_music_player
       url: "https://pub.dartlang.org"
@@ -49,7 +49,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_spinkit:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_spinkit
       url: "https://pub.dartlang.org"
@@ -75,7 +75,7 @@ packages:
     source: hosted
     version: "1.1.6"
   palette_generator:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: palette_generator
       url: "https://pub.dartlang.org"
@@ -96,7 +96,7 @@ packages:
     source: hosted
     version: "1.5.0"
   provider:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
@@ -110,21 +110,21 @@ packages:
     source: hosted
     version: "2.0.2"
   rxdart:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.0"
   shared_preferences:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.3+1"
   simple_permissions:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: simple_permissions
       url: "https://pub.dartlang.org"
@@ -136,7 +136,7 @@ packages:
     source: sdk
     version: "0.0.99"
   sliding_up_panel:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: sliding_up_panel
       url: "https://pub.dartlang.org"

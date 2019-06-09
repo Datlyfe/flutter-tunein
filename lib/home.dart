@@ -1,9 +1,9 @@
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:music/components/shuffle.dart';
 import 'package:provider/provider.dart';
 import 'blocs/global.dart';
+import 'components/shuffle.dart';
 import 'globals.dart';
 import 'components/card.dart';
 import 'models/playerstate.dart';

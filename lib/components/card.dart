@@ -1,7 +1,7 @@
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:music/blocs/global.dart';
-import 'package:music/models/playerstate.dart';
+import 'package:Tunein/blocs/global.dart';
+import 'package:Tunein/models/playerstate.dart';
 import 'package:provider/provider.dart';
 import '../globals.dart';
 
@@ -77,7 +77,7 @@ class MyCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            getArtists(_song.artist),
+                            MyUtils.getArtists(_song.artist),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 12,
@@ -120,9 +120,5 @@ class MyCard extends StatelessWidget {
     }
   }
 
-  String getArtists(artists) {
-    return artists.split(";").reduce((String a, String b) {
-      return a + " & " + b;
-    });
-  }
+  
 }

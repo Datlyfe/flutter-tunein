@@ -1,6 +1,6 @@
+import 'package:Tunein/models/playback.dart';
+import 'package:Tunein/models/playerstate.dart';
 import 'package:flute_music_player/flute_music_player.dart';
-import 'package:music/models/playback.dart';
-import 'package:music/models/playerstate.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';

@@ -10,3 +10,11 @@ class MyTheme {
   static final bgBottomBar = Color(0xff1e1e1e);
   static final bgdivider = Color(0xff2c2c2c);
 }
+
+class MyUtils {
+  static String getArtists(artists) {
+    return artists.split(";").reduce((String a, String b) {
+      return a + " & " + b;
+    });
+  }
+}

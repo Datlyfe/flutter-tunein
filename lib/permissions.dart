@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music/globals.dart';
-import 'package:music/root.dart';
+import 'package:Tunein/globals.dart';
+import 'package:Tunein/root.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
@@ -20,7 +20,7 @@ class GetPermissionsState extends State<GetPermissions> {
 
     store.musicPlayerBloc.retrieveFiles().then((data) {
       print(data.length);
-      if (data == null || data.length == 0) {
+      if (data.length == 0) {
         store.musicPlayerBloc.fetchSongs().then((_) {
           store.musicPlayerBloc.saveFiles();
           store.musicPlayerBloc.retrieveFavorites();
@@ -40,12 +40,13 @@ class GetPermissionsState extends State<GetPermissions> {
   @override
   void didChangeDependencies() {
     final GlobalBloc store = Provider.of<GlobalBloc>(context);
-    Future.delayed(
-      Duration(milliseconds: 0),
-      () {
-        init(store);
-      },
-    );
+    // Future.delayed(
+    //   Duration(milliseconds: 0),
+    //   () {
+    //     init(store);
+    //   },
+    // );
+    init(store);
     super.didChangeDependencies();
   }
 
