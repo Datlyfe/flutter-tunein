@@ -1,22 +1,33 @@
+import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:Tunein/blocs/global.dart';
 import 'package:Tunein/components/slider.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:provider/provider.dart';
 
 import 'controlls.dart';
 
-class NowPlayingScreen extends StatelessWidget {
+class NowPlayingScreen extends StatefulWidget {
+  @override
+  NowPlayingScreenState createState() => NowPlayingScreenState();
+}
+
+class NowPlayingScreenState extends State<NowPlayingScreen> {
+  final musicService = locator<MusicService>();
+
+  int maxVol;
+  int currentVol;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
-    final double _radius = 25.0;
     final double _screenHeight = MediaQuery.of(context).size.height;
-    final double _screenWidth = MediaQuery.of(context).size.width;
-
     final double _albumArtSize = _screenHeight / 2;
 
     return Scaffold(
@@ -25,7 +36,7 @@ class NowPlayingScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           StreamBuilder<MapEntry<PlayerState, Song>>(
-            stream: _globalBloc.musicPlayerBloc.playerState$,
+            stream: musicService.playerState$,
             builder: (BuildContext context,
                 AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
               if (!snapshot.hasData || snapshot.data.value.albumArt == null) {
@@ -51,50 +62,55 @@ class NowPlayingScreen extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       height: _screenHeight - _albumArtSize - 60,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      _currentSong.title,
-                                      maxLines: 1,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        MyUtils.getArtists(_currentSong.artist),
-                                        textAlign: TextAlign.center,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        _currentSong.title,
                                         maxLines: 1,
+                                        textAlign: TextAlign.center,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          color:
-                                              MyTheme.darkRed.withOpacity(0.7),
+                                          color: Colors.white,
                                           fontSize: 20,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          NowPlayingSlider(),
-                          MusicBoardControls(),
-                        ],
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: Text(
+                                          MyUtils.getArtists(
+                                              _currentSong.artist),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: MyTheme.darkRed
+                                                .withOpacity(0.7),
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            NowPlayingSlider(),
+                            MusicBoardControls(),
+                          ],
+                        ),
                       ),
                     ),
                   ],

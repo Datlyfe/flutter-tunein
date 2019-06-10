@@ -1,21 +1,23 @@
+import 'package:Tunein/root.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'blocs/global.dart';
-import 'permissions.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
-final GlobalBloc _globalBloc = GlobalBloc();
+void main() async {
+  final r =
+      await SimplePermissions.requestPermission(Permission.ReadExternalStorage);
+  print("permission is " + r.toString());
+  setupLocator();
 
-void main() => runApp(new MyApp());
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<GlobalBloc>.value(
-      value: _globalBloc,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: GetPermissions(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Root(),
     );
   }
 }

@@ -1,8 +1,8 @@
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
-import 'blocs/global.dart';
+import 'blocs/music_player.dart';
 import 'components/shuffle.dart';
 import 'globals.dart';
 import 'components/card.dart';
@@ -13,9 +13,24 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final musicService = locator<MusicService>();
+
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = new ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc store = Provider.of<GlobalBloc>(context);
     return Container(
       alignment: Alignment.center,
       color: MyTheme.darkBlack,
@@ -24,7 +39,7 @@ class HomePageState extends State<HomePage> {
           SuffleWidget(),
           Expanded(
             child: StreamBuilder(
-              stream: store.musicPlayerBloc.songs$,
+              stream: musicService.songs$,
               builder:
                   (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
                 if (!snapshot.hasData) {
@@ -41,12 +56,13 @@ class HomePageState extends State<HomePage> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemExtent: 70,
+                    controller: _scrollController,
                     physics: AlwaysScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemCount: _songs.length,
                     itemBuilder: (context, index) {
                       return StreamBuilder<MapEntry<PlayerState, Song>>(
-                        stream: store.musicPlayerBloc.playerState$,
+                        stream: musicService.playerState$,
                         builder: (BuildContext context,
                             AsyncSnapshot<MapEntry<PlayerState, Song>>
                                 snapshot) {
@@ -59,32 +75,32 @@ class HomePageState extends State<HomePage> {
                               _currentSong == _songs[index];
                           return GestureDetector(
                             onTap: () {
-                              store.musicPlayerBloc.updatePlaylist(_songs);
+                              musicService.updatePlaylist(_songs);
                               switch (_state) {
                                 case PlayerState.playing:
                                   if (_isSelectedSong) {
-                                    store.musicPlayerBloc
+                                    musicService
                                         .pauseMusic(_currentSong);
                                   } else {
-                                    store.musicPlayerBloc.stopMusic();
-                                    store.musicPlayerBloc.playMusic(
+                                    musicService.stopMusic();
+                                    musicService.playMusic(
                                       _songs[index],
                                     );
                                   }
                                   break;
                                 case PlayerState.paused:
                                   if (_isSelectedSong) {
-                                    store.musicPlayerBloc
+                                    musicService
                                         .playMusic(_songs[index]);
                                   } else {
-                                    store.musicPlayerBloc.stopMusic();
-                                    store.musicPlayerBloc.playMusic(
+                                    musicService.stopMusic();
+                                    musicService.playMusic(
                                       _songs[index],
                                     );
                                   }
                                   break;
                                 case PlayerState.stopped:
-                                  store.musicPlayerBloc
+                                  musicService
                                       .playMusic(_songs[index]);
                                   break;
                                 default:

@@ -1,18 +1,18 @@
+import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:Tunein/blocs/global.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:provider/provider.dart';
 
 class MusicBoardControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
+    final musicService = locator<MusicService>();
+
     return Container(
-        height: 100,
         width: double.infinity,
         child: StreamBuilder<MapEntry<PlayerState, Song>>(
-          stream: _globalBloc.musicPlayerBloc.playerState$,
+          stream: musicService.playerState$,
           builder: (BuildContext context,
               AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
             if (!snapshot.hasData) {
@@ -33,7 +33,7 @@ class MusicBoardControls extends StatelessWidget {
                     color: Colors.white70,
                     size: 50,
                   ),
-                  onTap: () => _globalBloc.musicPlayerBloc.playPreviousSong(),
+                  onTap: () => musicService.playPreviousSong(),
                 ),
                 InkWell(
                   onTap: () {
@@ -42,9 +42,9 @@ class MusicBoardControls extends StatelessWidget {
                       return;
                     }
                     if (PlayerState.paused == _state) {
-                      _globalBloc.musicPlayerBloc.playMusic(_currentSong);
+                      musicService.playMusic(_currentSong);
                     } else {
-                      _globalBloc.musicPlayerBloc.pauseMusic(_currentSong);
+                      musicService.pauseMusic(_currentSong);
                     }
                   },
                   child: AnimatedCrossFade(
@@ -70,7 +70,7 @@ class MusicBoardControls extends StatelessWidget {
                     color: Colors.white70,
                     size: 50,
                   ),
-                  onTap: () => _globalBloc.musicPlayerBloc.playNextSong(),
+                  onTap: () => musicService.playNextSong(),
                 ),
               ],
             );

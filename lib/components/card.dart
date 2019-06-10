@@ -1,13 +1,15 @@
+import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:Tunein/blocs/global.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:provider/provider.dart';
 import '../globals.dart';
 
 class MyCard extends StatelessWidget {
   final Song _song;
   String _duration;
+  final musicService = locator<MusicService>();
+
 
   MyCard({Key key, @required Song song})
       : _song = song,
@@ -15,11 +17,11 @@ class MyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc store = Provider.of<GlobalBloc>(context);
+    
 
     parseDuration();
     return StreamBuilder(
-      stream: store.musicPlayerBloc.playerState$,
+      stream: musicService.playerState$,
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
         if (!snapshot.hasData) {

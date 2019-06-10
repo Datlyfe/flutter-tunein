@@ -5,7 +5,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class MusicPlayerBloc {
+class MusicService {
   BehaviorSubject<List<Song>> _songs$;
   BehaviorSubject<MapEntry<PlayerState, Song>> _playerState$;
   BehaviorSubject<MapEntry<List<Song>, List<Song>>>
@@ -24,7 +24,7 @@ class MusicPlayerBloc {
   BehaviorSubject<List<Playback>> get playback$ => _playback$;
   BehaviorSubject<List<Song>> get favorites$ => _favorites$;
 
-  MusicPlayerBloc() {
+  MusicService() {
     _defaultSong = Song(
       null,
       " ",

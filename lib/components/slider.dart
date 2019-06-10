@@ -1,19 +1,19 @@
+import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:Tunein/blocs/global.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NowPlayingSlider extends StatelessWidget {
+  final musicService = locator<MusicService>();
+
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
-
     return StreamBuilder<MapEntry<Duration, MapEntry<PlayerState, Song>>>(
-      stream: Observable.combineLatest2(_globalBloc.musicPlayerBloc.position$,
-          _globalBloc.musicPlayerBloc.playerState$, (a, b) => MapEntry(a, b)),
+      stream: Observable.combineLatest2(musicService.position$,
+          musicService.playerState$, (a, b) => MapEntry(a, b)),
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<Duration, MapEntry<PlayerState, Song>>>
               snapshot) {
@@ -58,16 +58,16 @@ class NowPlayingSlider extends StatelessWidget {
                       ? _millseconds.toDouble()
                       : _songDurationInMilliseconds.toDouble(),
                   onChangeStart: (double value) =>
-                      _globalBloc.musicPlayerBloc.invertSeekingState(),
+                      musicService.invertSeekingState(),
                   onChanged: (double value) {
                     final Duration _duration = Duration(
                       milliseconds: value.toInt(),
                     );
-                    _globalBloc.musicPlayerBloc.updatePosition(_duration);
+                    musicService.updatePosition(_duration);
                   },
                   onChangeEnd: (double value) {
-                    _globalBloc.musicPlayerBloc.invertSeekingState();
-                    _globalBloc.musicPlayerBloc.audioSeek(value / 1000);
+                    musicService.invertSeekingState();
+                    musicService.audioSeek(value / 1000);
                   },
                   activeColor: MyTheme.darkRed.withOpacity(0.7),
                   inactiveColor: Colors.white24,

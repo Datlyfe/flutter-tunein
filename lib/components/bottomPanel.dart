@@ -1,28 +1,28 @@
+import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
-import 'package:Tunein/blocs/global.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../globals.dart';
 
 class BottomPanel extends StatelessWidget {
   final PanelController _controller;
+  final musicService = locator<MusicService>();
 
   BottomPanel({@required PanelController controller})
       : _controller = controller;
 
   @override
   Widget build(BuildContext context) {
-    final GlobalBloc _globalBloc = Provider.of<GlobalBloc>(context);
     return Container(
       color: MyTheme.bgBottomBar,
       height: double.infinity,
       width: double.infinity,
       alignment: Alignment.bottomCenter,
       child: StreamBuilder<MapEntry<PlayerState, Song>>(
-        stream: _globalBloc.musicPlayerBloc.playerState$,
+        stream: musicService.playerState$,
         builder: (BuildContext context,
             AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
           if (!snapshot.hasData) {
@@ -93,9 +93,9 @@ class BottomPanel extends StatelessWidget {
                       return;
                     }
                     if (PlayerState.paused == _state) {
-                      _globalBloc.musicPlayerBloc.playMusic(_currentSong);
+                      musicService.playMusic(_currentSong);
                     } else {
-                      _globalBloc.musicPlayerBloc.pauseMusic(_currentSong);
+                      musicService.pauseMusic(_currentSong);
                     }
                   },
                   child: Column(
