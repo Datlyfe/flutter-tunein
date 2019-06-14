@@ -15,11 +15,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final musicService = locator<MusicService>();
 
-  ScrollController _scrollController;
-
   @override
   void initState() {
-    _scrollController = new ScrollController();
     super.initState();
   }
 
@@ -50,71 +47,62 @@ class HomePageState extends State<HomePage> {
                 _songs.sort((a, b) {
                   return a.title.toLowerCase().compareTo(b.title.toLowerCase());
                 });
-                return Theme(
-                  data:
-                      Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemExtent: 70,
-                    controller: _scrollController,
-                    physics: AlwaysScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    itemCount: _songs.length,
-                    itemBuilder: (context, index) {
-                      return StreamBuilder<MapEntry<PlayerState, Song>>(
-                        stream: musicService.playerState$,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<MapEntry<PlayerState, Song>>
-                                snapshot) {
-                          if (!snapshot.hasData) {
-                            return Container();
-                          }
-                          final PlayerState _state = snapshot.data.key;
-                          final Song _currentSong = snapshot.data.value;
-                          final bool _isSelectedSong =
-                              _currentSong == _songs[index];
-                          return GestureDetector(
-                            onTap: () {
-                              musicService.updatePlaylist(_songs);
-                              switch (_state) {
-                                case PlayerState.playing:
-                                  if (_isSelectedSong) {
-                                    musicService
-                                        .pauseMusic(_currentSong);
-                                  } else {
-                                    musicService.stopMusic();
-                                    musicService.playMusic(
-                                      _songs[index],
-                                    );
-                                  }
-                                  break;
-                                case PlayerState.paused:
-                                  if (_isSelectedSong) {
-                                    musicService
-                                        .playMusic(_songs[index]);
-                                  } else {
-                                    musicService.stopMusic();
-                                    musicService.playMusic(
-                                      _songs[index],
-                                    );
-                                  }
-                                  break;
-                                case PlayerState.stopped:
-                                  musicService
-                                      .playMusic(_songs[index]);
-                                  break;
-                                default:
-                                  break;
-                              }
-                            },
-                            child: MyCard(
-                              song: _songs[index],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemExtent: 70,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: _songs.length,
+                  itemBuilder: (context, index) {
+                    return StreamBuilder<MapEntry<PlayerState, Song>>(
+                      stream: musicService.playerState$,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Container();
+                        }
+                        final PlayerState _state = snapshot.data.key;
+                        final Song _currentSong = snapshot.data.value;
+                        final bool _isSelectedSong =
+                            _currentSong == _songs[index];
+                        return GestureDetector(
+                          onTap: () {
+                            musicService.updatePlaylist(_songs);
+                            switch (_state) {
+                              case PlayerState.playing:
+                                if (_isSelectedSong) {
+                                  musicService.pauseMusic(_currentSong);
+                                } else {
+                                  musicService.stopMusic();
+                                  musicService.playMusic(
+                                    _songs[index],
+                                  );
+                                }
+                                break;
+                              case PlayerState.paused:
+                                if (_isSelectedSong) {
+                                  musicService.playMusic(_songs[index]);
+                                } else {
+                                  musicService.stopMusic();
+                                  musicService.playMusic(
+                                    _songs[index],
+                                  );
+                                }
+                                break;
+                              case PlayerState.stopped:
+                                musicService.playMusic(_songs[index]);
+                                break;
+                              default:
+                                break;
+                            }
+                          },
+                          child: MyCard(
+                            song: _songs[index],
+                          ),
+                          // child: Text(_songs[index].title,style:TextStyle(color: Colors.white) ,),
+                        );
+                      },
+                    );
+                  },
                 );
               },
             ),

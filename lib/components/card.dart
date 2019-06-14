@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Tunein/blocs/music_player.dart';
 import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
@@ -10,15 +12,12 @@ class MyCard extends StatelessWidget {
   String _duration;
   final musicService = locator<MusicService>();
 
-
   MyCard({Key key, @required Song song})
       : _song = song,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    
-
     parseDuration();
     return StreamBuilder(
       stream: musicService.playerState$,
@@ -27,17 +26,15 @@ class MyCard extends StatelessWidget {
         if (!snapshot.hasData) {
           return Container();
         }
-        final PlayerState _state = snapshot.data.key;
         final Song _currentSong = snapshot.data.value;
         final bool _isSelectedSong = _song == _currentSong;
-        return AnimatedContainer(
-          height: 70,
-          duration: Duration(milliseconds: 250),
-          decoration: _isSelectedSong
-              ? BoxDecoration(
-                  color: MyTheme.darkRed.withOpacity(0.7),
-                )
-              : BoxDecoration(),
+        final _textColor = _isSelectedSong ? Colors.white : Colors.white54;
+        final _fontWeight = _isSelectedSong ? FontWeight.w900 : FontWeight.w400;
+
+
+        return Container(
+          // height: 70,
+          color: Colors.transparent,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           child: Row(
             children: <Widget>[
@@ -45,21 +42,13 @@ class MyCard extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: ClipRRect(
-                        borderRadius: new BorderRadius.circular(1.0),
-                        child: FadeInImage(
-                          fadeInDuration: Duration(milliseconds: 50),
-                          fadeOutDuration: Duration(milliseconds: 50),
-                          image: AssetImage(_song.albumArt != null
-                              ? _song.albumArt
-                              : "images/default_track.png"),
-                          placeholder: AssetImage("images/default_track.png"),
-                          fit: BoxFit.fitHeight,
-                        ),
-                        // child: Text("image"),
-                        // child: Image.asset(this.image),
-                      ),
+                      padding: EdgeInsets.only(right: 15),
+                      child: _song.albumArt != null
+                          ? Image.file(
+                              new File(_song.albumArt),
+                              filterQuality: FilterQuality.low,
+                            )
+                          : Image.asset('images/default_track.png'),
                     ),
                     Flexible(
                       child: Column(
@@ -72,19 +61,19 @@ class MyCard extends StatelessWidget {
                               _song.title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: MyTheme.grey700,
+                                fontSize: 14.5,
+                                fontWeight: _fontWeight,
+                                color: Colors.white,
                               ),
                             ),
                           ),
                           Text(
-                            MyUtils.getArtists(_song.artist),
+                            _song.artist,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white54,
+                              fontSize: 13.5,
+                              fontWeight: _fontWeight,
+                              color: _textColor,
                             ),
                           ),
                         ],
@@ -121,6 +110,4 @@ class MyCard extends StatelessWidget {
       _duration = _minutes.toString() + ":0" + _seconds.toString();
     }
   }
-
-  
 }

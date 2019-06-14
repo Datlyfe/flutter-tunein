@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
 
 class MusicBoardControls extends StatelessWidget {
+  final List<Color> colors;
+  MusicBoardControls(this.colors);
+
   @override
   Widget build(BuildContext context) {
     final musicService = locator<MusicService>();
@@ -30,44 +33,51 @@ class MusicBoardControls extends StatelessWidget {
                 InkWell(
                   child: Icon(
                     IconData(0xeb21, fontFamily: 'boxicons'),
-                    color: Colors.white70,
+                    color: colors[1],
                     size: 50,
                   ),
                   onTap: () => musicService.playPreviousSong(),
                 ),
                 InkWell(
-                  onTap: () {
-                    print("hello");
-                    if (_currentSong.uri == null) {
-                      return;
-                    }
-                    if (PlayerState.paused == _state) {
-                      musicService.playMusic(_currentSong);
-                    } else {
-                      musicService.pauseMusic(_currentSong);
-                    }
-                  },
-                  child: AnimatedCrossFade(
-                    duration: Duration(milliseconds: 200),
-                    crossFadeState: _state == PlayerState.playing
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                    firstChild: Icon(
-                      IconData(0xeb03, fontFamily: 'boxicons'),
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                    secondChild: Icon(
-                      IconData(0xeb10, fontFamily: 'boxicons'),
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  ),
-                ),
+                    onTap: () {
+                      print("hello");
+                      if (_currentSong.uri == null) {
+                        return;
+                      }
+                      if (PlayerState.paused == _state) {
+                        musicService.playMusic(_currentSong);
+                      } else {
+                        musicService.pauseMusic(_currentSong);
+                      }
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: colors[1],
+                            borderRadius: BorderRadius.circular(30)),
+                        height: 60,
+                        width: 60,
+                        child: Center(
+                          child: AnimatedCrossFade(
+                            duration: Duration(milliseconds: 200),
+                            crossFadeState: _state == PlayerState.playing
+                                ? CrossFadeState.showFirst
+                                : CrossFadeState.showSecond,
+                            firstChild: Icon(
+                              Icons.pause,
+                              color: Colors.white70,
+                              size: 30,
+                            ),
+                            secondChild: Icon(
+                              Icons.play_arrow,
+                              color: Colors.white70,
+                              size: 30,
+                            ),
+                          ),
+                        ))),
                 InkWell(
                   child: Icon(
                     IconData(0xea8d, fontFamily: 'boxicons'),
-                    color: Colors.white70,
+                    color: colors[1],
                     size: 50,
                   ),
                   onTap: () => musicService.playNextSong(),

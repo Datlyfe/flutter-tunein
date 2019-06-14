@@ -8,6 +8,8 @@ import 'package:rxdart/rxdart.dart';
 
 class NowPlayingSlider extends StatelessWidget {
   final musicService = locator<MusicService>();
+  final List<Color> colors;
+  NowPlayingSlider(this.colors);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class NowPlayingSlider extends StatelessWidget {
               Text(
                 parseDuration(_currentDuration.inMilliseconds),
                 style: TextStyle(
-                    color: Colors.white,
+                    color: colors[1],
                     fontSize: 12,
                     fontWeight: FontWeight.w600),
               ),
@@ -69,14 +71,14 @@ class NowPlayingSlider extends StatelessWidget {
                     musicService.invertSeekingState();
                     musicService.audioSeek(value / 1000);
                   },
-                  activeColor: MyTheme.darkRed.withOpacity(0.7),
-                  inactiveColor: Colors.white24,
+                  activeColor: colors[1],
+                  inactiveColor: colors[1].withOpacity(.2),
                 ),
               ),
               Text(
                 parseDuration(_songDurationInMilliseconds),
                 style: TextStyle(
-                    color: Colors.white,
+                    color: colors[1],
                     fontSize: 12,
                     fontWeight: FontWeight.w600),
               ),
