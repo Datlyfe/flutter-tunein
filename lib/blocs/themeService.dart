@@ -12,7 +12,7 @@ class ThemeService {
   }
 
   void _initStreams() {
-    _colors$ = BehaviorSubject<List<dynamic>>.seeded([0x000000, 0xffffff]);
+    _colors$ = BehaviorSubject<List<dynamic>>.seeded([0xff1e1e1e, 0xffffffff]);
   }
 
   void updateTheme(path) async {

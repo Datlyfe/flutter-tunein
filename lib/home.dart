@@ -29,11 +29,12 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(bottom: 85),
       alignment: Alignment.center,
       color: MyTheme.darkBlack,
       child: Column(
         children: <Widget>[
-          SuffleWidget(),
+          PageHeader("Library", "All Tracks", 0xeccd),
           Expanded(
             child: StreamBuilder(
               stream: musicService.songs$,

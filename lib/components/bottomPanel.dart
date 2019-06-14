@@ -26,13 +26,23 @@ class BottomPanel extends StatelessWidget {
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
         if (!snapshot.hasData) {
-          return Container();
+          return Container(
+            color: MyTheme.bgBottomBar,
+            height: double.infinity,
+            width: double.infinity,
+            alignment: Alignment.bottomCenter,
+          );
         }
 
         final Song _currentSong = snapshot.data.value;
 
         if (_currentSong.id == null) {
-          return Container();
+          return Container(
+            color: MyTheme.bgBottomBar,
+            height: double.infinity,
+            width: double.infinity,
+            alignment: Alignment.bottomCenter,
+          );
         }
 
         final PlayerState _state = snapshot.data.key;
@@ -79,7 +89,7 @@ class BottomPanel extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.only(right: 20),
+                  padding: EdgeInsets.only(right: 20, left: 5),
                   child: Image.file(File(_currentSong.albumArt))),
               Flexible(
                 child: Column(

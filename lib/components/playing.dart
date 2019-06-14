@@ -4,6 +4,7 @@ import 'package:Tunein/blocs/music_player.dart';
 import 'package:Tunein/blocs/themeService.dart';
 import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:Tunein/components/slider.dart';
@@ -42,7 +43,9 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
         if (!snapshot.hasData || snapshot.data.value.albumArt == null) {
-          return Text("No album art");
+          return Scaffold(
+            backgroundColor: MyTheme.bgBottomBar,
+          );
         }
 
         final Song _currentSong = snapshot.data.value;
@@ -94,11 +97,28 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Container(
-          constraints: BoxConstraints(
-              maxHeight: _screenHeight / 2, minHeight: _screenHeight / 2),
-          padding: const EdgeInsets.all(10),
-          child: Image.file(File(_currentSong.albumArt)),
-        ),
+            constraints: BoxConstraints(
+                maxHeight: _screenHeight / 2, minHeight: _screenHeight / 2),
+            padding: const EdgeInsets.all(10),
+            child: Dismissible(
+              key: UniqueKey(),
+              // background: Image.asset("images/logo2.png"),
+              movementDuration: Duration(milliseconds: 500),
+              resizeDuration: Duration(milliseconds: 2),
+              dismissThresholds: const {
+                DismissDirection.endToStart: 0.3,
+                DismissDirection.startToEnd: 0.3
+              },
+              direction: DismissDirection.horizontal,
+              onDismissed: (DismissDirection direction) {
+                if (direction == DismissDirection.startToEnd) {
+                  musicService.playPreviousSong();
+                } else {
+                  musicService.playNextSong();
+                }
+              },
+              child: Image.file(File(_currentSong.albumArt)),
+            )),
         Expanded(
           child: Container(
             decoration: BoxDecoration(

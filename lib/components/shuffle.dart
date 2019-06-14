@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../globals.dart';
 
-class SuffleWidget extends StatelessWidget {
+class PageHeader extends StatelessWidget {
+  final String title;
+  final String subTitle;
+  final int icon;
+  PageHeader(this.title, this.subTitle, this.icon);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +23,7 @@ class SuffleWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 width: 60,
                 child: Icon(
-                  Icons.shuffle,
+                  IconData(icon, fontFamily: 'boxicons'),
                   color: Colors.white,
                   size: 30,
                 ),
@@ -33,7 +37,7 @@ class SuffleWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
-                      "Shuffle Play",
+                      title,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 14,
@@ -43,7 +47,7 @@ class SuffleWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "All Trakcs",
+                    subTitle,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12,

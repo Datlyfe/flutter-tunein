@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/components/favorites.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/components/playing.dart';
 import 'package:Tunein/home.dart';
@@ -99,11 +100,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                   controller: _pageController,
                   children: <Widget>[
                     HomePage(),
-                    Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: MyTheme.darkBlack,
-                    )
+                    FavoritesPage()
                   ],
                 ),
               ),
