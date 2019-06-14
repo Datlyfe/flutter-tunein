@@ -1,9 +1,14 @@
+import 'package:Tunein/blocs/themeService.dart';
 import 'package:Tunein/models/playback.dart';
 import 'package:Tunein/models/playerstate.dart';
+import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+  final themeService = locator<ThemeService>();
+
 
 class MusicService {
   BehaviorSubject<List<Song>> _songs$;
@@ -55,6 +60,7 @@ class MusicService {
   void pauseMusic(Song song) {
     _audioPlayer.pause();
     updatePlayerState(PlayerState.paused, song);
+
   }
 
   void stopMusic() {
@@ -63,6 +69,7 @@ class MusicService {
 
   void updatePlayerState(PlayerState state, Song song) {
     _playerState$.add(MapEntry(state, song));
+    themeService.updateTheme(song.albumArt);
   }
 
   void updatePosition(Duration duration) {

@@ -58,7 +58,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
+      onWillPop: () {
         if (!_panelController.isPanelClosed()) {
           _panelController.close();
         } else {

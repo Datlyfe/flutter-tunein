@@ -13,7 +13,6 @@ dependencies:
   shared_preferences: ^0.5.3+1
   simple_permissions: ^0.1.9
   get_it: ^1.0.3+1
-  fluttery_seekbar: ^0.0.1
 
 dev_dependencies:
   flutter_test:
