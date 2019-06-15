@@ -14,7 +14,7 @@ class GridCell extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Image.file(File(song.albumArt)),
+            song.albumArt==null?Image.asset("images/cover.png"):Image.file(File(song.albumArt)),
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20),

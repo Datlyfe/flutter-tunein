@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:Tunein/blocs/music_player.dart';
-import 'package:Tunein/components/favorites.dart';
+import 'package:Tunein/pages/favorites.dart';
+import 'package:Tunein/pages/home.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/components/playing.dart';
-import 'package:Tunein/home.dart';
 import 'package:flutter/services.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'components/appbar.dart';
 import 'components/bottomPanel.dart';
 import 'globals.dart';
-import 'package:Tunein/store/locator.dart';
 
 enum StartupState { Busy, Success, Error }
 
@@ -93,7 +93,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
               backdropEnabled: true,
               backdropOpacity: 0.5,
               parallaxEnabled: true,
-              collapsed: BottomPanel(controller: _panelController),
+              collapsed: BottomPanel(),
               body: Theme(
                 data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
                 child: PageView(

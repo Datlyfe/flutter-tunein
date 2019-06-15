@@ -1,6 +1,7 @@
-import 'package:Tunein/blocs/music_player.dart';
-import 'package:Tunein/blocs/themeService.dart';
+import 'package:Tunein/services/musicService.dart';
+import 'package:Tunein/services/themeService.dart';
 import 'package:get_it/get_it.dart';
+
 
 GetIt locator = new GetIt();
 

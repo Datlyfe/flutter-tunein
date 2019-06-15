@@ -1,6 +1,6 @@
-import 'package:Tunein/blocs/music_player.dart';
 import 'package:Tunein/models/songplus.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';

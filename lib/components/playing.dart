@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:Tunein/blocs/music_player.dart';
-import 'package:Tunein/blocs/themeService.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
+import 'package:Tunein/services/themeService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,6 @@ import 'package:flutter/painting.dart';
 import 'package:Tunein/components/slider.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controlls.dart';
@@ -23,11 +22,6 @@ class NowPlayingScreen extends StatefulWidget {
 class NowPlayingScreenState extends State<NowPlayingScreen> {
   final musicService = locator<MusicService>();
   final themeService = locator<ThemeService>();
-
-  final _androidAppRetain = MethodChannel("android_app_retain");
-
-  int maxVol;
-  int currentVol;
 
   @override
   void initState() {
@@ -42,13 +36,19 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
       stream: musicService.playerState$,
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
-        if (!snapshot.hasData || snapshot.data.value.albumArt == null) {
+        if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: MyTheme.bgBottomBar,
           );
         }
 
         final Song _currentSong = snapshot.data.value;
+
+        if (_currentSong.id == null) {
+           return Scaffold(
+            backgroundColor: MyTheme.bgBottomBar,
+          );
+        }
 
         return Scaffold(
             body: StreamBuilder<List<int>>(
@@ -67,7 +67,6 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                       colors,
                       _screenHeight,
                     ),
-                    // child: getAlternativeLayout(),
                   );
                 }));
       },
@@ -85,9 +84,11 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  getPlayinglayout(_currentSong, List<int> colors, _screenHeight) {
+  getPlayinglayout(Song _currentSong, List<int> colors, double _screenHeight) {
     MapEntry<Song, Song> songs = musicService.getNextPrevSong(_currentSong);
-
+    if (songs == null) return Container();
+    String image = songs.value.albumArt;
+    String image2 = songs.key.albumArt;
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
@@ -97,13 +98,14 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
             padding: const EdgeInsets.all(10),
             child: Dismissible(
               key: UniqueKey(),
-              background: Image.file(File(songs.value.albumArt)),
-              secondaryBackground: Image.file(File(songs.key.albumArt)),
+              background: image == null
+                  ? Image.asset("images/cover.png")
+                  : Image.file(File(image)),
+              secondaryBackground: image2 == null
+                  ? Image.asset("images/cover.png")
+                  : Image.file(File(image2)),
               movementDuration: Duration(milliseconds: 500),
               resizeDuration: Duration(milliseconds: 2),
-              onResize: () {
-                print("resize");
-              },
               dismissThresholds: const {
                 DismissDirection.endToStart: 0.3,
                 DismissDirection.startToEnd: 0.3
@@ -116,7 +118,9 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                   musicService.playNextSong();
                 }
               },
-              child: Image.file(File(_currentSong.albumArt)),
+              child: _currentSong.albumArt == null
+                  ? Image.asset("images/cover.png")
+                  : Image.file(File(_currentSong.albumArt)),
             )),
         Expanded(
           child: Container(

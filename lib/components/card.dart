@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:Tunein/blocs/music_player.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
-import '../globals.dart';
 
 class MyCard extends StatelessWidget {
   final Song _song;
@@ -31,7 +30,6 @@ class MyCard extends StatelessWidget {
         final _textColor = _isSelectedSong ? Colors.white : Colors.white54;
         final _fontWeight = _isSelectedSong ? FontWeight.w900 : FontWeight.w400;
 
-
         return Container(
           // height: 70,
           color: Colors.transparent,
@@ -43,12 +41,15 @@ class MyCard extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(right: 15),
-                      child: _song.albumArt != null
-                          ? Image.file(
-                              new File(_song.albumArt),
-                              filterQuality: FilterQuality.low,
-                            )
-                          : Image.asset('images/default_track.png'),
+                      child: FadeInImage(
+                        placeholder: AssetImage('images/track.png'),
+                        fadeInDuration: Duration(milliseconds: 100),
+                        image: _song.albumArt != null
+                            ? FileImage(
+                                new File(_song.albumArt),
+                              )
+                            : AssetImage('images/track.png'),
+                      ),
                     ),
                     Flexible(
                       child: Column(

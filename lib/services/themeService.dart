@@ -16,6 +16,10 @@ class ThemeService {
   }
 
   void updateTheme(path) async {
+    if (path == null) {
+      _colors$.add([0xff1e1e1e, 0xffffffff]);
+      return;
+    }
     final colors =
         await _androidAppRetain.invokeMethod("getColor", {"path": path});
     List<int> _colors = List<int>();

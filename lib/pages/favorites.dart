@@ -1,10 +1,10 @@
-import 'package:Tunein/blocs/music_player.dart';
 import 'package:Tunein/components/gridcell.dart';
-import 'package:Tunein/components/shuffle.dart';
+import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
 import 'package:Tunein/models/songplus.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +21,7 @@ class FavoritesPageState extends State<FavoritesPage> {
 
     final double itemWidth = size.width / 2;
     return Container(
+      padding: EdgeInsets.only(bottom: 85),
       height: double.infinity,
       width: double.infinity,
       color: MyTheme.darkBlack,
@@ -28,7 +29,7 @@ class FavoritesPageState extends State<FavoritesPage> {
         children: <Widget>[
           PageHeader(
             "Favorites",
-            "0 Tracks",
+            "All Tracks",
             MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
           ),
           Expanded(

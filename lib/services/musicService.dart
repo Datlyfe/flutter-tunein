@@ -1,12 +1,13 @@
-import 'package:Tunein/blocs/themeService.dart';
 import 'package:Tunein/models/playback.dart';
 import 'package:Tunein/models/playerstate.dart';
 import 'package:Tunein/models/songplus.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/themeService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+import 'locator.dart';
 
 final themeService = locator<ThemeService>();
 

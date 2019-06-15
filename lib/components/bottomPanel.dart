@@ -1,23 +1,19 @@
 import 'dart:io';
 
-import 'package:Tunein/blocs/music_player.dart';
-import 'package:Tunein/blocs/themeService.dart';
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
+import 'package:Tunein/services/themeService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../globals.dart';
 
 class BottomPanel extends StatelessWidget {
-  final PanelController _controller;
   final musicService = locator<MusicService>();
   final themeService = locator<ThemeService>();
 
-  BottomPanel({@required PanelController controller})
-      : _controller = controller;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +85,11 @@ class BottomPanel extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.only(right: 20, left: 5),
-                  child: Image.file(File(_currentSong.albumArt))),
+                padding: EdgeInsets.only(right: 20, left: 5),
+                child: _currentSong.albumArt != null
+                    ? Image.file(File(_currentSong.albumArt))
+                    : Image.asset("images/track.png"),
+              ),
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

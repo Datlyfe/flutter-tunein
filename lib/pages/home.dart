@@ -1,13 +1,13 @@
-import 'package:Tunein/store/locator.dart';
+import 'package:Tunein/components/card.dart';
+import 'package:Tunein/components/pageheader.dart';
+import 'package:Tunein/globals.dart';
+import 'package:Tunein/models/playerstate.dart';
+import 'package:Tunein/services/locator.dart';
+import 'package:Tunein/services/musicService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'blocs/music_player.dart';
-import 'components/shuffle.dart';
-import 'globals.dart';
-import 'components/card.dart';
-import 'models/playback.dart';
-import 'models/playerstate.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
@@ -23,7 +23,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
