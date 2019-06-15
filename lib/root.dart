@@ -52,6 +52,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
       musicService.retrieveFavorites();
       _startupStatus.add(StartupState.Success);
     } else {
+      musicService.retrieveFavorites();
       _startupStatus.add(StartupState.Success);
     }
   }
@@ -98,10 +99,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                 child: PageView(
                   physics: AlwaysScrollableScrollPhysics(),
                   controller: _pageController,
-                  children: <Widget>[
-                    HomePage(),
-                    FavoritesPage()
-                  ],
+                  children: <Widget>[HomePage(), FavoritesPage()],
                 ),
               ),
             );

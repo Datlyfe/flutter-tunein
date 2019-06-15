@@ -48,7 +48,7 @@ class BottomPanel extends StatelessWidget {
         final PlayerState _state = snapshot.data.key;
         final String _artists = getArtists(_currentSong);
 
-        return StreamBuilder<List<dynamic>>(
+        return StreamBuilder<List<int>>(
             stream: themeService.colors$,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -102,8 +102,8 @@ class BottomPanel extends StatelessWidget {
                         _currentSong.title,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 16,
-                          color: Color(colors[1]),
+                          fontSize: 15,
+                          color: Color(colors[1]).withOpacity(.7),
                         ),
                       ),
                     ),
@@ -111,8 +111,8 @@ class BottomPanel extends StatelessWidget {
                       _artists,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 12,
-                        color: Color(colors[1]),
+                        fontSize: 11,
+                        color: Color(colors[1]).withOpacity(.7),
                       ),
                     ),
                   ],
@@ -143,11 +143,11 @@ class BottomPanel extends StatelessWidget {
                   child: _state == PlayerState.playing
                       ? Icon(
                           Icons.pause,
-                          color: Color(colors[1]),
+                          color: Color(colors[1]).withOpacity(.7),
                         )
                       : Icon(
                           Icons.play_arrow,
-                          color: Color(colors[1]),
+                          color: Color(colors[1]).withOpacity(.7),
                         ),
                 ),
               ],

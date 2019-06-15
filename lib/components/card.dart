@@ -61,7 +61,7 @@ class MyCard extends StatelessWidget {
                               _song.title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: 14.5,
+                                fontSize: 13.5,
                                 fontWeight: _fontWeight,
                                 color: Colors.white,
                               ),
@@ -71,7 +71,7 @@ class MyCard extends StatelessWidget {
                             _song.artist,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 13.5,
+                              fontSize: 12.5,
                               fontWeight: _fontWeight,
                               color: _textColor,
                             ),

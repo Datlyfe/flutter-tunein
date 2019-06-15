@@ -5,7 +5,7 @@ import '../globals.dart';
 class PageHeader extends StatelessWidget {
   final String title;
   final String subTitle;
-  final int icon;
+  final MapEntry<IconData,Color> icon;
   PageHeader(this.title, this.subTitle, this.icon);
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class PageHeader extends StatelessWidget {
                 alignment: Alignment.center,
                 width: 60,
                 child: Icon(
-                  IconData(icon, fontFamily: 'boxicons'),
-                  color: Colors.white,
+                  this.icon.key,
+                  color: this.icon.value,
                   size: 30,
                 ),
               ),

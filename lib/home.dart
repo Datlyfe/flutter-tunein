@@ -6,6 +6,7 @@ import 'blocs/music_player.dart';
 import 'components/shuffle.dart';
 import 'globals.dart';
 import 'components/card.dart';
+import 'models/playback.dart';
 import 'models/playerstate.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,7 +35,8 @@ class HomePageState extends State<HomePage> {
       color: MyTheme.darkBlack,
       child: Column(
         children: <Widget>[
-          PageHeader("Library", "All Tracks", 0xeccd),
+          PageHeader("Library", "All Tracks",
+              MapEntry(IconData(0xeccd, fontFamily: 'boxicons'), Colors.white)),
           Expanded(
             child: StreamBuilder(
               stream: musicService.songs$,
@@ -50,7 +52,7 @@ class HomePageState extends State<HomePage> {
                 });
                 return ListView.builder(
                   shrinkWrap: true,
-                  itemExtent: 70,
+                  itemExtent: 62,
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: _songs.length,
                   itemBuilder: (context, index) {

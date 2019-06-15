@@ -1,14 +1,14 @@
 import 'package:Tunein/blocs/themeService.dart';
 import 'package:Tunein/models/playback.dart';
 import 'package:Tunein/models/playerstate.dart';
+import 'package:Tunein/models/songplus.dart';
 import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-  final themeService = locator<ThemeService>();
-
+final themeService = locator<ThemeService>();
 
 class MusicService {
   BehaviorSubject<List<Song>> _songs$;
@@ -17,7 +17,7 @@ class MusicService {
       _playlist$; //key is normal, value is shuffle
   BehaviorSubject<Duration> _position$;
   BehaviorSubject<List<Playback>> _playback$;
-  BehaviorSubject<List<Song>> _favorites$;
+  BehaviorSubject<List<SongPlus>> _favorites$;
   BehaviorSubject<bool> _isAudioSeeking$;
   MusicFinder _audioPlayer;
   Song _defaultSong;
@@ -27,7 +27,8 @@ class MusicService {
       _playerState$;
   BehaviorSubject<Duration> get position$ => _position$;
   BehaviorSubject<List<Playback>> get playback$ => _playback$;
-  BehaviorSubject<List<Song>> get favorites$ => _favorites$;
+  BehaviorSubject<List<SongPlus>> get favorites$ => _favorites$;
+  BehaviorSubject<MapEntry<List<Song>, List<Song>>> get playlist$ => _playlist$;
 
   MusicService() {
     _defaultSong = Song(
@@ -60,7 +61,6 @@ class MusicService {
   void pauseMusic(Song song) {
     _audioPlayer.pause();
     updatePlayerState(PlayerState.paused, song);
-
   }
 
   void stopMusic() {
@@ -100,6 +100,32 @@ class MusicService {
     playMusic(_playlist[_index]);
   }
 
+  int getSongIndex(song) {
+    final bool _isShuffle = _playback$.value.contains(Playback.shuffle);
+    final List<Song> _playlist =
+        _isShuffle ? _playlist$.value.value : _playlist$.value.key;
+    return _playlist.indexOf(song);
+  }
+
+  MapEntry<Song, Song> getNextPrevSong(Song _currentSong) {
+    final bool _isShuffle = _playback$.value.contains(Playback.shuffle);
+    final List<Song> _playlist =
+        _isShuffle ? _playlist$.value.value : _playlist$.value.key;
+    int _index = _playlist.indexOf(_currentSong);
+    int nextSongIndex = _index + 1;
+    int prevSongIndex = _index - 1;
+
+    if (_index == _playlist.length - 1) {
+      nextSongIndex = 0;
+    }
+    if (_index == 0) {
+      prevSongIndex = _playlist.length - 1;
+    }
+    Song nextSong = _playlist[nextSongIndex];
+    Song prevSong = _playlist[prevSongIndex];
+    return MapEntry(nextSong, prevSong);
+  }
+
   void playPreviousSong() {
     if (_playerState$.value.key == PlayerState.stopped) {
       return;
@@ -137,16 +163,18 @@ class MusicService {
     _audioPlayer.seek(seconds);
   }
 
-  void addToFavorites(Song song) async {
-    List<Song> _favorites = _favorites$.value;
+  void addToFavorites(SongPlus song) async {
+    List<SongPlus> _favorites = _favorites$.value;
     _favorites.add(song);
     _favorites$.add(_favorites);
     await saveFavorites();
   }
 
-  void removeFromFavorites(Song song) async {
-    List<Song> _favorites = _favorites$.value;
-    _favorites.remove(song);
+  void removeFromFavorites(SongPlus _song) async {
+    List<SongPlus> _favorites = _favorites$.value;
+    final int index = _favorites.indexWhere((song) => song.id == _song.id);
+    print(index);
+    _favorites.removeAt(index);
     _favorites$.add(_favorites);
     await saveFavorites();
   }
@@ -191,10 +219,10 @@ class MusicService {
 
   Future<void> saveFavorites() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
-    final List<Song> _favorites = _favorites$.value;
+    final List<SongPlus> _favorites = _favorites$.value;
     List<String> _encodedStrings = [];
-    for (Song song in _favorites) {
-      _encodedStrings.add(_encodeSongToJson(song));
+    for (SongPlus song in _favorites) {
+      _encodedStrings.add(_encodeSongPlusToJson(song));
     }
     _prefs.setStringList("favorites", _encodedStrings);
   }
@@ -225,12 +253,12 @@ class MusicService {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     final List<Song> _fetchedSongs = _songs$.value;
     List<String> _savedStrings = _prefs.getStringList("favorites") ?? [];
-    List<Song> _favorites = [];
+    List<SongPlus> _favorites = [];
     for (String data in _savedStrings) {
-      final Song song = _decodeSongFromJson(data);
+      final SongPlus song = _decodeSongPlusFromJson(data);
       for (var fetchedSong in _fetchedSongs) {
         if (song.id == fetchedSong.id) {
-          _favorites.add(fetchedSong);
+          _favorites.add(SongPlus(fetchedSong, song.colors));
         }
       }
     }
@@ -242,10 +270,21 @@ class MusicService {
     final data = json.encode(_songMap);
     return data;
   }
+  String _encodeSongPlusToJson(SongPlus song) {
+    final _songMap = songPlusToMap(song);
+    final data = json.encode(_songMap);
+    return data;
+  }
 
   Song _decodeSongFromJson(String ecodedSong) {
     final _songMap = json.decode(ecodedSong);
     final Song _song = Song.fromMap(_songMap);
+    return _song;
+  }
+  SongPlus _decodeSongPlusFromJson(String ecodedSong) {
+    final _songMap = json.decode(ecodedSong);
+    final SongPlus _song = SongPlus.fromMap(_songMap);
+    print(_song.colors);
     return _song;
   }
 
@@ -261,6 +300,19 @@ class MusicService {
     _map["albumArt"] = song.albumArt;
     return _map;
   }
+   Map<String, dynamic> songPlusToMap(SongPlus song) {
+    Map<String, dynamic> _map = {};
+    _map["album"] = song.album;
+    _map["id"] = song.id;
+    _map["artist"] = song.artist;
+    _map["title"] = song.title;
+    _map["albumId"] = song.albumId;
+    _map["duration"] = song.duration;
+    _map["uri"] = song.uri;
+    _map["albumArt"] = song.albumArt;
+    _map["colors"] = song.colors;
+    return _map;
+  }
 
   void _initStreams() {
     _isAudioSeeking$ = BehaviorSubject<bool>.seeded(false);
@@ -268,7 +320,7 @@ class MusicService {
     _position$ = BehaviorSubject<Duration>();
     _playlist$ = BehaviorSubject<MapEntry<List<Song>, List<Song>>>();
     _playback$ = BehaviorSubject<List<Playback>>.seeded([]);
-    _favorites$ = BehaviorSubject<List<Song>>.seeded([]);
+    _favorites$ = BehaviorSubject<List<SongPlus>>.seeded([]);
     _playerState$ = BehaviorSubject<MapEntry<PlayerState, Song>>.seeded(
       MapEntry(
         PlayerState.stopped,

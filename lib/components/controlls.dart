@@ -1,11 +1,13 @@
 import 'package:Tunein/blocs/music_player.dart';
+import 'package:Tunein/models/songplus.dart';
 import 'package:Tunein/store/locator.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
+import 'package:rxdart/rxdart.dart';
 
 class MusicBoardControls extends StatelessWidget {
-  final List<Color> colors;
+  final List<int> colors;
   MusicBoardControls(this.colors);
 
   @override
@@ -13,17 +15,31 @@ class MusicBoardControls extends StatelessWidget {
     final musicService = locator<MusicService>();
 
     return Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
         width: double.infinity,
-        child: StreamBuilder<MapEntry<PlayerState, Song>>(
-          stream: musicService.playerState$,
+        child: StreamBuilder<
+            MapEntry<MapEntry<PlayerState, Song>, List<SongPlus>>>(
+          stream: Observable.combineLatest2(
+            musicService.playerState$,
+            musicService.favorites$,
+            (a, b) => MapEntry(a, b),
+          ),
           builder: (BuildContext context,
-              AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+              AsyncSnapshot<
+                      MapEntry<MapEntry<PlayerState, Song>, List<SongPlus>>>
+                  snapshot) {
             if (!snapshot.hasData) {
               return Container();
             }
 
-            final _currentSong = snapshot.data.value;
-            final _state = snapshot.data.key;
+            final _state = snapshot.data.key.key;
+            final _currentSong = snapshot.data.key.value;
+            final List<SongPlus> _favorites = snapshot.data.value;
+            SongPlus songPlus = SongPlus(_currentSong, colors);
+
+            final int index =
+                _favorites.indexWhere((song) => song.id == _currentSong.id);
+            final bool _isFavorited = index == -1 ? false : true;
 
             return Row(
               mainAxisSize: MainAxisSize.max,
@@ -32,15 +48,22 @@ class MusicBoardControls extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   child: Icon(
+                    Icons.loop,
+                    color: new Color(colors[1]).withOpacity(.7),
+                    size: 30,
+                  ),
+                  onTap: () => musicService.playNextSong(),
+                ),
+                InkWell(
+                  child: Icon(
                     IconData(0xeb21, fontFamily: 'boxicons'),
-                    color: colors[1],
-                    size: 50,
+                    color: new Color(colors[1]).withOpacity(.7),
+                    size: 40,
                   ),
                   onTap: () => musicService.playPreviousSong(),
                 ),
                 InkWell(
                     onTap: () {
-                      print("hello");
                       if (_currentSong.uri == null) {
                         return;
                       }
@@ -52,10 +75,10 @@ class MusicBoardControls extends StatelessWidget {
                     },
                     child: Container(
                         decoration: BoxDecoration(
-                            color: colors[1],
+                            color: new Color(colors[1]).withOpacity(.7),
                             borderRadius: BorderRadius.circular(30)),
-                        height: 60,
-                        width: 60,
+                        height: 50,
+                        width: 50,
                         child: Center(
                           child: AnimatedCrossFade(
                             duration: Duration(milliseconds: 200),
@@ -64,12 +87,12 @@ class MusicBoardControls extends StatelessWidget {
                                 : CrossFadeState.showSecond,
                             firstChild: Icon(
                               Icons.pause,
-                              color: Colors.white70,
+                              color: Color(colors[0]),
                               size: 30,
                             ),
                             secondChild: Icon(
                               Icons.play_arrow,
-                              color: Colors.white70,
+                              color: Color(colors[0]),
                               size: 30,
                             ),
                           ),
@@ -77,11 +100,24 @@ class MusicBoardControls extends StatelessWidget {
                 InkWell(
                   child: Icon(
                     IconData(0xea8d, fontFamily: 'boxicons'),
-                    color: colors[1],
-                    size: 50,
+                    color: new Color(colors[1]).withOpacity(.7),
+                    size: 40,
                   ),
                   onTap: () => musicService.playNextSong(),
                 ),
+                InkWell(
+                    child: Icon(
+                      _isFavorited ? Icons.favorite : Icons.favorite_border,
+                      color: new Color(colors[1]).withOpacity(.7),
+                      size: 30,
+                    ),
+                    onTap: () {
+                      if (_isFavorited) {
+                        musicService.removeFromFavorites(songPlus);
+                      } else {
+                        musicService.addToFavorites(songPlus);
+                      }
+                    }),
               ],
             );
           },

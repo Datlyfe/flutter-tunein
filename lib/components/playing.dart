@@ -51,9 +51,9 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
         final Song _currentSong = snapshot.data.value;
 
         return Scaffold(
-            body: StreamBuilder<List<dynamic>>(
+            body: StreamBuilder<List<int>>(
                 stream: themeService.colors$,
-                builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                builder: (context, AsyncSnapshot<List<int>> snapshot) {
                   if (!snapshot.hasData) {
                     return Container();
                   }
@@ -64,7 +64,7 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                     color: new Color(colors[0]),
                     child: getPlayinglayout(
                       _currentSong,
-                      [Color(colors[0]), Color(colors[1])],
+                      colors,
                       _screenHeight,
                     ),
                     // child: getAlternativeLayout(),
@@ -85,14 +85,9 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  Future<List<dynamic>> updateTheme(path) async {
-    final List<dynamic> colors =
-        await _androidAppRetain.invokeMethod("getColor", {"path": path});
-    themeService.updateTheme(colors);
-    return colors;
-  }
+  getPlayinglayout(_currentSong, List<int> colors, _screenHeight) {
+    MapEntry<Song, Song> songs = musicService.getNextPrevSong(_currentSong);
 
-  getPlayinglayout(_currentSong, List<Color> colors, _screenHeight) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
@@ -102,9 +97,13 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
             padding: const EdgeInsets.all(10),
             child: Dismissible(
               key: UniqueKey(),
-              // background: Image.asset("images/logo2.png"),
+              background: Image.file(File(songs.value.albumArt)),
+              secondaryBackground: Image.file(File(songs.key.albumArt)),
               movementDuration: Duration(milliseconds: 500),
               resizeDuration: Duration(milliseconds: 2),
+              onResize: () {
+                print("resize");
+              },
               dismissThresholds: const {
                 DismissDirection.endToStart: 0.3,
                 DismissDirection.startToEnd: 0.3
@@ -124,10 +123,10 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
             decoration: BoxDecoration(
               boxShadow: [
                 new BoxShadow(
-                    color: colors[0],
-                    blurRadius: 80,
-                    spreadRadius: 70,
-                    offset: new Offset(0, -30)),
+                    color: Color(colors[0]),
+                    blurRadius: 50,
+                    spreadRadius: 50,
+                    offset: new Offset(0, -20)),
               ],
             ),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -147,8 +146,8 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: colors[1],
-                              fontSize: 23,
+                              color: Color(colors[1]).withOpacity(.7),
+                              fontSize: 18,
                             ),
                           ),
                           Padding(
@@ -159,7 +158,7 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: colors[1],
+                                color: Color(colors[1]).withOpacity(.7),
                                 fontSize: 15,
                               ),
                             ),
