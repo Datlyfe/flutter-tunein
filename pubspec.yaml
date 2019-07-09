@@ -1,5 +1,5 @@
 name: Tunein
-description: A new Flutter project.
+description: music player app.
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -14,6 +14,7 @@ dependencies:
   simple_permissions: ^0.1.9
   get_it: ^1.0.3+1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -27,9 +28,6 @@ flutter:
       fonts:
         - asset: fonts/boxicons.ttf
           weight: 400
-    - family: pacifico
-      fonts:
-        - asset: fonts/Pacifico-Regular.ttf
 
   
   uses-material-design: true

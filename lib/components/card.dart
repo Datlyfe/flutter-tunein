@@ -8,7 +8,6 @@ import 'package:Tunein/models/playerstate.dart';
 
 class MyCard extends StatelessWidget {
   final Song _song;
-  String _duration;
   final musicService = locator<MusicService>();
 
   MyCard({Key key, @required Song song})
@@ -17,7 +16,6 @@ class MyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    parseDuration();
     return StreamBuilder(
       stream: musicService.playerState$,
       builder: (BuildContext context,
@@ -41,14 +39,19 @@ class MyCard extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(right: 15),
-                      child: FadeInImage(
-                        placeholder: AssetImage('images/track.png'),
-                        fadeInDuration: Duration(milliseconds: 100),
-                        image: _song.albumArt != null
-                            ? FileImage(
-                                new File(_song.albumArt),
-                              )
-                            : AssetImage('images/track.png'),
+                      child: SizedBox(
+                        height: 62,
+                        width: 62,
+                        child: FadeInImage(
+                          placeholder: AssetImage('images/track.png'),
+                          fadeInDuration: Duration(milliseconds: 200),
+                          fadeOutDuration: Duration(milliseconds: 100),
+                          image: _song.albumArt != null
+                              ? FileImage(
+                                  new File(_song.albumArt),
+                                )
+                              : AssetImage('images/track.png'),
+                        ),
                       ),
                     ),
                     Flexible(
@@ -84,31 +87,19 @@ class MyCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: Text(
-                  _duration,
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: IconButton(
+                    icon: Icon(
+                      IconData(0xea7c, fontFamily: 'boxicons'),
+                      size: 22,
+                    ),
+                    onPressed: () {},
+                    color: Colors.white30,
+                  )),
             ],
           ),
         );
       },
     );
-  }
-
-  void parseDuration() {
-    final double _temp = _song.duration / 1000;
-    final int _minutes = (_temp / 60).floor();
-    final int _seconds = (((_temp / 60) - _minutes) * 60).round();
-    if (_seconds.toString().length != 1) {
-      _duration = _minutes.toString() + ":" + _seconds.toString();
-    } else {
-      _duration = _minutes.toString() + ":0" + _seconds.toString();
-    }
   }
 }

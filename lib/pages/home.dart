@@ -7,6 +7,7 @@ import 'package:Tunein/services/musicService.dart';
 import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:math' as math;
 
 
 class HomePage extends StatefulWidget {
@@ -34,8 +35,6 @@ class HomePageState extends State<HomePage> {
       color: MyTheme.darkBlack,
       child: Column(
         children: <Widget>[
-          PageHeader("Library", "All Tracks",
-              MapEntry(IconData(0xeccd, fontFamily: 'boxicons'), Colors.white)),
           Expanded(
             child: StreamBuilder(
               stream: musicService.songs$,
@@ -52,6 +51,7 @@ class HomePageState extends State<HomePage> {
                 return ListView.builder(
                   shrinkWrap: true,
                   itemExtent: 62,
+                  // physics: CustomScrollPhysics(),
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: _songs.length,
                   itemBuilder: (context, index) {
@@ -66,8 +66,10 @@ class HomePageState extends State<HomePage> {
                         final Song _currentSong = snapshot.data.value;
                         final bool _isSelectedSong =
                             _currentSong == _songs[index];
-                        return GestureDetector(
+                        return InkWell(
+                          enableFeedback: false,
                           onTap: () {
+                            print("Wtf");
                             musicService.updatePlaylist(_songs);
                             switch (_state) {
                               case PlayerState.playing:
@@ -111,6 +113,63 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CustomSimulation extends Simulation {
+  final double initPosition;
+  final double velocity;
+  final double maxPos;
+
+  CustomSimulation({this.initPosition,this.maxPos,this.velocity});
+
+  @override
+  double x(double time) {
+    var max =
+        math.max(math.min(initPosition, 0.0), math.min(initPosition + velocity * time, maxPos));
+
+    // print(max.toString());
+
+    return max;
+  }
+
+  @override
+  double dx(double time) {
+    // print(velocity.toString());
+    return velocity;
+  }
+
+  @override
+  bool isDone(double time) {
+    return false;
+  }
+}
+
+class CustomScrollPhysics extends ScrollPhysics {
+
+const CustomScrollPhysics({ ScrollPhysics parent }) : super(parent: parent);
+
+  @override
+  CustomScrollPhysics applyTo(ScrollPhysics ancestor) {
+    return CustomScrollPhysics(parent: buildParent(ancestor));
+  }
+
+  // @override
+  // ScrollPhysics applyTo(ScrollPhysics ancestor) {
+  //   return CustomScrollPhysics();
+  // }
+
+  @override
+  bool shouldAcceptUserOffset(ScrollMetrics position) => true;
+
+  @override
+  Simulation createBallisticSimulation(
+      ScrollMetrics position, double velocity) {
+    return CustomSimulation(
+      initPosition: position.pixels,
+      maxPos:position.maxScrollExtent,
+      velocity: velocity,
     );
   }
 }

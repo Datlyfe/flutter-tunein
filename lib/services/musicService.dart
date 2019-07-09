@@ -174,7 +174,6 @@ class MusicService {
   void removeFromFavorites(SongPlus _song) async {
     List<SongPlus> _favorites = _favorites$.value;
     final int index = _favorites.indexWhere((song) => song.id == _song.id);
-    print(index);
     _favorites.removeAt(index);
     _favorites$.add(_favorites);
     await saveFavorites();
@@ -271,6 +270,7 @@ class MusicService {
     final data = json.encode(_songMap);
     return data;
   }
+
   String _encodeSongPlusToJson(SongPlus song) {
     final _songMap = songPlusToMap(song);
     final data = json.encode(_songMap);
@@ -282,10 +282,10 @@ class MusicService {
     final Song _song = Song.fromMap(_songMap);
     return _song;
   }
+
   SongPlus _decodeSongPlusFromJson(String ecodedSong) {
     final _songMap = json.decode(ecodedSong);
     final SongPlus _song = SongPlus.fromMap(_songMap);
-    print(_song.colors);
     return _song;
   }
 
@@ -301,7 +301,8 @@ class MusicService {
     _map["albumArt"] = song.albumArt;
     return _map;
   }
-   Map<String, dynamic> songPlusToMap(SongPlus song) {
+
+  Map<String, dynamic> songPlusToMap(SongPlus song) {
     Map<String, dynamic> _map = {};
     _map["album"] = song.album;
     _map["id"] = song.id;
