@@ -1,7 +1,6 @@
-import 'package:Tunein/models/songplus.dart';
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,7 +17,7 @@ class MusicBoardControls extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
         width: double.infinity,
         child: StreamBuilder<
-            MapEntry<MapEntry<PlayerState, Song>, List<SongPlus>>>(
+            MapEntry<MapEntry<PlayerState, Tune>, List<Tune>>>(
           stream: Observable.combineLatest2(
             musicService.playerState$,
             musicService.favorites$,
@@ -26,7 +25,7 @@ class MusicBoardControls extends StatelessWidget {
           ),
           builder: (BuildContext context,
               AsyncSnapshot<
-                      MapEntry<MapEntry<PlayerState, Song>, List<SongPlus>>>
+                      MapEntry<MapEntry<PlayerState, Tune>, List<Tune>>>
                   snapshot) {
             if (!snapshot.hasData) {
               return Container();
@@ -34,8 +33,7 @@ class MusicBoardControls extends StatelessWidget {
 
             final _state = snapshot.data.key.key;
             final _currentSong = snapshot.data.key.value;
-            final List<SongPlus> _favorites = snapshot.data.value;
-            SongPlus songPlus = SongPlus(_currentSong, colors);
+            final List<Tune> _favorites = snapshot.data.value;
 
             final int index =
                 _favorites.indexWhere((song) => song.id == _currentSong.id);

@@ -1,6 +1,6 @@
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
@@ -13,11 +13,11 @@ class NowPlayingSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MapEntry<Duration, MapEntry<PlayerState, Song>>>(
+    return StreamBuilder<MapEntry<Duration, MapEntry<PlayerState, Tune>>>(
       stream: Observable.combineLatest2(musicService.position$,
           musicService.playerState$, (a, b) => MapEntry(a, b)),
       builder: (BuildContext context,
-          AsyncSnapshot<MapEntry<Duration, MapEntry<PlayerState, Song>>>
+          AsyncSnapshot<MapEntry<Duration, MapEntry<PlayerState, Tune>>>
               snapshot) {
         if (!snapshot.hasData) {
           return Slider(
@@ -36,7 +36,7 @@ class NowPlayingSlider extends StatelessWidget {
           );
         }
         final Duration _currentDuration = snapshot.data.key;
-        final Song _currentSong = snapshot.data.value.value;
+        final Tune _currentSong = snapshot.data.value.value;
         final int _millseconds = _currentDuration.inMilliseconds;
         final int _songDurationInMilliseconds = _currentSong.duration;
         return Padding(

@@ -19,8 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.os.Environment;
+
 public class MainActivity extends FlutterActivity {
   private static final String CHANNEL = "android_app_retain";
+  private static final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+
 
   public static int getDominantColor(Bitmap bitmap) {
     Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 1, 1, true);
@@ -38,9 +42,42 @@ public class MainActivity extends FlutterActivity {
     new MethodChannel(getFlutterView(), CHANNEL).setMethodCallHandler(new MethodChannel.MethodCallHandler() {
       @Override
       public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-        // Map<String, Object> arguments = methodCall.arguments();
+        Map<String, Object> arguments = methodCall.arguments();
         if (methodCall.method.equals("sendToBackground")) {
           moveTaskToBack(true);
+        }
+
+        if (methodCall.method.equals("getStoragePath")) {
+          String path = Environment.getDataDirectory().toString();
+          result.success(path);
+        }
+
+        if (methodCall.method.equals("getMetaData")) {
+          String filepath = (String) arguments.get("filepath");
+          System.out.println(filepath);
+          List l = new ArrayList();
+          mmr.setDataSource(filepath);
+          l.add(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE));
+          l.add(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST));
+          try {
+            l.add(mmr.getEmbeddedPicture());
+          } catch (Exception e) {
+            l.add("");
+          }
+          
+          l.add(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM));
+          l.add(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER));
+          l.add(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+          result.success(l);
+        } 
+
+        if (methodCall.method.equals("getSdCardPath")) {
+          String removableStoragePath = null;
+          try {
+            removableStoragePath = getExternalCacheDirs()[1].toString();
+          } catch (Exception e) {
+          }
+          result.success(removableStoragePath);
         }
 
         if (methodCall.method.equals("getColor")) {

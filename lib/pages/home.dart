@@ -2,9 +2,9 @@ import 'package:Tunein/components/card.dart';
 import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:math' as math;
@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
             child: StreamBuilder(
               stream: musicService.songs$,
               builder:
-                  (BuildContext context, AsyncSnapshot<List<Song>> snapshot) {
+                  (BuildContext context, AsyncSnapshot<List<Tune>> snapshot) {
                 if (!snapshot.hasData) {
                   return Container();
                 }
@@ -55,10 +55,10 @@ class HomePageState extends State<HomePage> {
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: _songs.length + 1,
                   itemBuilder: (context, index) {
-                    return StreamBuilder<MapEntry<PlayerState, Song>>(
+                    return StreamBuilder<MapEntry<PlayerState, Tune>>(
                       stream: musicService.playerState$,
                       builder: (BuildContext context,
-                          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+                          AsyncSnapshot<MapEntry<PlayerState, Tune>> snapshot) {
                         if (!snapshot.hasData) {
                           return Container();
                         }
@@ -75,7 +75,7 @@ class HomePageState extends State<HomePage> {
 
                         int newIndex = index - 1;
                         final PlayerState _state = snapshot.data.key;
-                        final Song _currentSong = snapshot.data.value;
+                        final Tune _currentSong = snapshot.data.value;
                         final bool _isSelectedSong =
                             _currentSong == _songs[newIndex];
 

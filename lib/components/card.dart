@@ -1,16 +1,16 @@
 import 'dart:io';
 
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
 
 class MyCard extends StatelessWidget {
-  final Song _song;
+  final Tune _song;
   final musicService = locator<MusicService>();
 
-  MyCard({Key key, @required Song song})
+  MyCard({Key key, @required Tune song})
       : _song = song,
         super(key: key);
 
@@ -19,11 +19,11 @@ class MyCard extends StatelessWidget {
     return StreamBuilder(
       stream: musicService.playerState$,
       builder: (BuildContext context,
-          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+          AsyncSnapshot<MapEntry<PlayerState, Tune>> snapshot) {
         if (!snapshot.hasData) {
           return Container();
         }
-        final Song _currentSong = snapshot.data.value;
+        final Tune _currentSong = snapshot.data.value;
         final bool _isSelectedSong = _song == _currentSong;
         final _textColor = _isSelectedSong ? Colors.white : Colors.white54;
         final _fontWeight = _isSelectedSong ? FontWeight.w900 : FontWeight.w400;

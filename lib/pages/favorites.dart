@@ -1,11 +1,9 @@
 import 'package:Tunein/components/gridcell.dart';
-import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:Tunein/models/songplus.dart';
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/material.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -33,9 +31,9 @@ class FavoritesPageState extends State<FavoritesPage> {
           //   MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
           // ),
           Expanded(
-            child: StreamBuilder<List<SongPlus>>(
+            child: StreamBuilder<List<Tune>>(
                 stream: musicService.favorites$,
-                builder: (context, AsyncSnapshot<List<SongPlus>> snapshot) {
+                builder: (context, AsyncSnapshot<List<Tune>> snapshot) {
                   if (!snapshot.hasData) {
                     return Container();
                   }
@@ -51,16 +49,16 @@ class FavoritesPageState extends State<FavoritesPage> {
                       childAspectRatio: (itemWidth / (itemWidth + 50)),
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      return StreamBuilder<MapEntry<PlayerState, Song>>(
+                      return StreamBuilder<MapEntry<PlayerState, Tune>>(
                           stream: musicService.playerState$,
                           builder: (context,
-                              AsyncSnapshot<MapEntry<PlayerState, Song>>
+                              AsyncSnapshot<MapEntry<PlayerState, Tune>>
                                   snapshot) {
                             if (!snapshot.hasData) {
                               return Container();
                             }
                             final PlayerState _state = snapshot.data.key;
-                            final Song _currentSong = snapshot.data.value;
+                            final Tune _currentSong = snapshot.data.value;
                             final bool _isSelectedSong =
                                 _currentSong.id == _songs[index].id;
                             return GestureDetector(

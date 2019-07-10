@@ -1,7 +1,4 @@
 import 'dart:async';
-
-import 'package:Tunein/components/appbar.dart';
-import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/pages/favorites.dart';
 import 'package:Tunein/pages/home.dart';
 import 'package:Tunein/services/layout.dart';
@@ -74,7 +71,6 @@ class RootState extends State<Root> with TickerProviderStateMixin {
   Future loadFiles() async {
     _startupStatus.add(StartupState.Busy);
     final data = await musicService.retrieveFiles();
-    print(data.length);
     if (data.length == 0) {
       await musicService.fetchSongs();
       musicService.saveFiles();
@@ -84,8 +80,6 @@ class RootState extends State<Root> with TickerProviderStateMixin {
       musicService.retrieveFavorites();
       _startupStatus.add(StartupState.Success);
     }
-
-    print(musicService.songs$.value.length);
   }
 
   @override
@@ -123,7 +117,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Container(
-                      margin: MediaQuery.of(context).padding,
+                      padding: MediaQuery.of(context).padding,
                     ),
                     Container(
                         height: 60,
@@ -165,7 +159,6 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                             )
                           ],
                         )),
-                       
                     Flexible(
                       // fit: FlexFit.tight,
                       child: PageView(

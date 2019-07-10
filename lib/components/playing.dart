@@ -1,16 +1,15 @@
 import 'dart:io';
 
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
 import 'package:Tunein/services/themeService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:Tunein/components/slider.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controlls.dart';
@@ -33,17 +32,17 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
   Widget build(BuildContext context) {
     final _screenHeight = MediaQuery.of(context).size.height;
 
-    return StreamBuilder<MapEntry<PlayerState, Song>>(
+    return StreamBuilder<MapEntry<PlayerState, Tune>>(
       stream: musicService.playerState$,
       builder: (BuildContext context,
-          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+          AsyncSnapshot<MapEntry<PlayerState, Tune>> snapshot) {
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: MyTheme.bgBottomBar,
           );
         }
 
-        final Song _currentSong = snapshot.data.value;
+        final Tune _currentSong = snapshot.data.value;
 
         if (_currentSong.id == null) {
           return Scaffold(
@@ -60,7 +59,7 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                   }
                   final colors = snapshot.data;
                   return AnimatedContainer(
-                    margin: MediaQuery.of(context).padding,
+                    padding: MediaQuery.of(context).padding,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.decelerate,
                     color: Color(colors[0]),
@@ -75,7 +74,7 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
     );
   }
 
-  String getDuration(Song _song) {
+  String getDuration(Tune _song) {
     final double _temp = _song.duration / 1000;
     final int _minutes = (_temp / 60).floor();
     final int _seconds = (((_temp / 60) - _minutes) * 60).round();
@@ -86,9 +85,12 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
     }
   }
 
-  getPlayinglayout(Song _currentSong, List<int> colors, double _screenHeight) {
-    MapEntry<Song, Song> songs = musicService.getNextPrevSong(_currentSong);
-    if (songs == null) return Container();
+  getPlayinglayout(Tune _currentSong, List<int> colors, double _screenHeight) {
+    MapEntry<Tune, Tune> songs = musicService.getNextPrevSong(_currentSong);
+    if (_currentSong == null || songs == null) {
+      return Container();
+    }
+    
     String image = songs.value.albumArt;
     String image2 = songs.key.albumArt;
     return Column(

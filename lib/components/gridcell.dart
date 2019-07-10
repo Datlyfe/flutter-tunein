@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:Tunein/models/songplus.dart';
+import 'package:Tunein/plugins/nano.dart';
 import 'package:flutter/material.dart';
 
 class GridCell extends StatelessWidget {
   const GridCell(this.song);
   @required
-  final SongPlus song;
+  final Tune song;
 
   @override
   Widget build(BuildContext context) {

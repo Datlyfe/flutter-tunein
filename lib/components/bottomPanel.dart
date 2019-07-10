@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
 import 'package:Tunein/services/themeService.dart';
-import 'package:flute_music_player/flute_music_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/models/playerstate.dart';
@@ -17,10 +17,10 @@ class BottomPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MapEntry<PlayerState, Song>>(
+    return StreamBuilder<MapEntry<PlayerState, Tune>>(
       stream: musicService.playerState$,
       builder: (BuildContext context,
-          AsyncSnapshot<MapEntry<PlayerState, Song>> snapshot) {
+          AsyncSnapshot<MapEntry<PlayerState, Tune>> snapshot) {
         if (!snapshot.hasData) {
           return Container(
             color: MyTheme.bgBottomBar,
@@ -30,7 +30,7 @@ class BottomPanel extends StatelessWidget {
           );
         }
 
-        final Song _currentSong = snapshot.data.value;
+        final Tune _currentSong = snapshot.data.value;
 
         if (_currentSong.id == null) {
           return Container(
@@ -72,7 +72,7 @@ class BottomPanel extends StatelessWidget {
     );
   }
 
-  String getArtists(Song song) {
+  String getArtists(Tune song) {
     return song.artist.split(";").reduce((String a, String b) {
       return a + " & " + b;
     });

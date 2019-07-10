@@ -7,12 +7,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flute_music_player: ^0.0.6
+  audioplayer: ^0.5.2
+  path_provider: ^0.4.1
   rxdart: ^0.22.0
   sliding_up_panel: ^0.3.4
   shared_preferences: ^0.5.3+1
   simple_permissions: ^0.1.9
   get_it: ^1.0.3+1
+  crypto: ^2.0.6
+  uuid: ^2.0.2
+
 
 
 dev_dependencies:
