@@ -27,11 +27,11 @@ class FavoritesPageState extends State<FavoritesPage> {
       color: MyTheme.darkBlack,
       child: Column(
         children: <Widget>[
-          PageHeader(
-            "Favorites",
-            "All Tracks",
-            MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
-          ),
+          // PageHeader(
+          //   "Favorites",
+          //   "All Tracks",
+          //   MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
+          // ),
           Expanded(
             child: StreamBuilder<List<SongPlus>>(
                 stream: musicService.favorites$,
@@ -42,6 +42,7 @@ class FavoritesPageState extends State<FavoritesPage> {
                   final _songs = snapshot.data;
 
                   return GridView.builder(
+                    padding: EdgeInsets.all(0),
                     itemCount: _songs.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:Tunein/components/appbar.dart';
+import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/pages/favorites.dart';
 import 'package:Tunein/pages/home.dart';
 import 'package:Tunein/services/layout.dart';
@@ -47,7 +48,6 @@ class RootState extends State<Root> with TickerProviderStateMixin {
     loadFiles();
 
     _pageController.addListener(() {
-      int round = (_pageController.page).round();
       int floor = (_pageController.page).floor();
 
       layoutService.updatePageIndex(_pageController.page);
@@ -74,6 +74,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
   Future loadFiles() async {
     _startupStatus.add(StartupState.Busy);
     final data = await musicService.retrieveFiles();
+    print(data.length);
     if (data.length == 0) {
       await musicService.fetchSongs();
       musicService.saveFiles();
@@ -83,6 +84,8 @@ class RootState extends State<Root> with TickerProviderStateMixin {
       musicService.retrieveFavorites();
       _startupStatus.add(StartupState.Success);
     }
+
+    print(musicService.songs$.value.length);
   }
 
   @override
@@ -97,21 +100,12 @@ class RootState extends State<Root> with TickerProviderStateMixin {
         }
       },
       child: Scaffold(
-        appBar: MyAppBar(0),
-        drawer: Drawer(),
         backgroundColor: MyTheme.darkBlack,
         body: StreamBuilder<StartupState>(
           stream: _startupStatus.stream,
           builder: (BuildContext context, AsyncSnapshot<StartupState> snap) {
             if (!snap.hasData || snap.data == StartupState.Busy) {
-              return Container(
-                child: Center(
-                  child: Text(
-                    "Loading Tracks...",
-                    style: TextStyle(color: Colors.white, fontSize: 30),
-                  ),
-                ),
-              );
+              return Container();
             }
 
             return SlidingUpPanel(
@@ -126,10 +120,13 @@ class RootState extends State<Root> with TickerProviderStateMixin {
               body: Theme(
                 data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Container(
+                      margin: MediaQuery.of(context).padding,
+                    ),
+                    Container(
                         height: 60,
-                        // padding: EdgeInsets.only(left: 20),
                         child: Row(
                           children: <Widget>[
                             Padding(
@@ -145,6 +142,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                                 )),
                             Expanded(
                               child: ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
                                 controller: _headerController,
                                 scrollDirection: Axis.horizontal,
                                 itemCount:
@@ -167,7 +165,9 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                             )
                           ],
                         )),
-                    Expanded(
+                       
+                    Flexible(
+                      // fit: FlexFit.tight,
                       child: PageView(
                         physics: AlwaysScrollableScrollPhysics(),
                         controller: _pageController,
@@ -176,6 +176,32 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                           FavoritesPage(),
                         ],
                       ),
+                    ),
+                    BottomNavigationBar(
+                      backgroundColor: MyTheme.bgBottomBar,
+                      unselectedItemColor: Colors.white54,
+                      selectedItemColor: Colors.white,
+                      type: BottomNavigationBarType.shifting,
+                      showUnselectedLabels: false,
+                      iconSize: 22,
+                      items: layoutService.bottomnavItems
+                          .map((item) => BottomNavigationBarItem(
+                              backgroundColor: MyTheme.bgBottomBar,
+                              icon: item.value,
+                              title: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Text(
+                                  item.key.toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              )))
+                          .toList(),
+                    ),
+                    SizedBox(
+                      height: 60,
                     )
                   ],
                 ),
@@ -205,44 +231,45 @@ class PageTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<double>(
-        stream: layoutService.pageIndex$.stream,
-        builder: (context, AsyncSnapshot<double> snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
+      stream: layoutService.pageIndex$.stream,
+      builder: (context, AsyncSnapshot<double> snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        final double pageValue = snapshot.data;
+
+        double opacity = 0.24;
+        int floor = pageValue.floor();
+        int ceil = pageValue.ceil();
+
+        if (index == ceil && index == floor) {
+          opacity = 1;
+        } else {
+          double dx = (ceil - pageValue);
+
+          if (index == floor) {
+            opacity = math.max(dx, 0.24);
           }
-          final double pageValue = snapshot.data;
-
-          double opacity = 0.24;
-          int floor = pageValue.floor();
-          int ceil = pageValue.ceil();
-
-          if (index == ceil && index == floor) {
-            opacity = 1;
-          } else {
-            double dx = (ceil - pageValue);
-
-            if (index == floor) {
-              opacity = math.max(dx, 0.24);
-            }
-            if (index == ceil) {
-              opacity = math.max(1 - dx, 0.24);
-            }
+          if (index == ceil) {
+            opacity = math.max(1 - dx, 0.24);
           }
+        }
 
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => onAfterBuild(context));
-          return Container(
-            // width: 116,
-            alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.white.withOpacity(opacity),
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+        WidgetsBinding.instance
+            .addPostFrameCallback((_) => onAfterBuild(context));
+        return Container(
+          // width: 116,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            style: TextStyle(
+              color: Colors.white.withOpacity(opacity),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

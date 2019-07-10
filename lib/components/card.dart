@@ -29,9 +29,8 @@ class MyCard extends StatelessWidget {
         final _fontWeight = _isSelectedSong ? FontWeight.w900 : FontWeight.w400;
 
         return Container(
-          // height: 70,
           color: Colors.transparent,
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          padding: EdgeInsets.symmetric( vertical: 5),
           child: Row(
             children: <Widget>[
               Expanded(

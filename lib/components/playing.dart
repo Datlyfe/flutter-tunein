@@ -10,6 +10,7 @@ import 'package:flutter/painting.dart';
 import 'package:Tunein/components/slider.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'controlls.dart';
@@ -45,7 +46,7 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
         final Song _currentSong = snapshot.data.value;
 
         if (_currentSong.id == null) {
-           return Scaffold(
+          return Scaffold(
             backgroundColor: MyTheme.bgBottomBar,
           );
         }
@@ -59,9 +60,10 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
                   }
                   final colors = snapshot.data;
                   return AnimatedContainer(
+                    margin: MediaQuery.of(context).padding,
                     duration: Duration(milliseconds: 500),
                     curve: Curves.decelerate,
-                    color: new Color(colors[0]),
+                    color: Color(colors[0]),
                     child: getPlayinglayout(
                       _currentSong,
                       colors,

@@ -48,17 +48,17 @@ class MusicBoardControls extends StatelessWidget {
               children: <Widget>[
                 InkWell(
                   child: Icon(
-                    Icons.loop,
-                    color: new Color(colors[1]).withOpacity(.7),
-                    size: 30,
+                    Icons.repeat,
+                    color: new Color(colors[1]).withOpacity(.5),
+                    size: 20,
                   ),
-                  onTap: () => musicService.playNextSong(),
+                  onTap: () {}
                 ),
                 InkWell(
                   child: Icon(
-                    IconData(0xeb21, fontFamily: 'boxicons'),
+                    IconData(0xeb40, fontFamily: 'boxicons'),
                     color: new Color(colors[1]).withOpacity(.7),
-                    size: 40,
+                    size: 35,
                   ),
                   onTap: () => musicService.playPreviousSong(),
                 ),
@@ -99,25 +99,34 @@ class MusicBoardControls extends StatelessWidget {
                         ))),
                 InkWell(
                   child: Icon(
-                    IconData(0xea8d, fontFamily: 'boxicons'),
+                    IconData(0xeb3f, fontFamily: 'boxicons'),
                     color: new Color(colors[1]).withOpacity(.7),
-                    size: 40,
+                    size: 35,
                   ),
                   onTap: () => musicService.playNextSong(),
                 ),
+                // InkWell(
+                //   child: Icon(
+                //     _isFavorited ? Icons.favorite : Icons.favorite_border,
+                //     color: new Color(colors[1]).withOpacity(.7),
+                //     size: 30,
+                //   ),
+                //   onTap: () {
+                //     if (_isFavorited) {
+                //       musicService.removeFromFavorites(songPlus);
+                //     } else {
+                //       musicService.addToFavorites(songPlus);
+                //     }
+                //   },
+                // ),
                 InkWell(
-                    child: Icon(
-                      _isFavorited ? Icons.favorite : Icons.favorite_border,
-                      color: new Color(colors[1]).withOpacity(.7),
-                      size: 30,
-                    ),
-                    onTap: () {
-                      if (_isFavorited) {
-                        musicService.removeFromFavorites(songPlus);
-                      } else {
-                        musicService.addToFavorites(songPlus);
-                      }
-                    }),
+                  child: Icon(
+                    Icons.shuffle,
+                    color: new Color(colors[1]).withOpacity(.5),
+                    size: 20,
+                  ),
+                  onTap: () {}
+                ),
               ],
             );
           },

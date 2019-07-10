@@ -8,6 +8,9 @@ class LayoutService {
   List<MapEntry<String, GlobalKey>> _mainNavItems$;
   List<MapEntry<String, GlobalKey>> get mainNavitems => _mainNavItems$;
 
+  List<MapEntry<String, Icon>> _bottomnavItems;
+  List<MapEntry<String, Icon>> get bottomnavItems => _bottomnavItems;
+
   List<double> _navSizes;
   List<double> _cumulativeNavSizes;
   bool _isSet;
@@ -51,6 +54,14 @@ class LayoutService {
     List<MapEntry<String, GlobalKey>> defaultNav = [
       MapEntry("Tracks", GlobalKey()),
       MapEntry("Favorites", GlobalKey()),
+    ];
+
+    _bottomnavItems = [
+      MapEntry("Library", Icon(IconData(0xec2f, fontFamily: 'boxicons'))),
+      MapEntry("Playlists", Icon(IconData(0xeccd, fontFamily: 'boxicons'))),
+      MapEntry("Search", Icon(IconData(0xeb2e, fontFamily: 'boxicons'))),
+      MapEntry("Equalizer", Icon(IconData(0xea86, fontFamily: 'boxicons'))),
+      MapEntry("Settings", Icon(IconData(0xec2e, fontFamily: 'boxicons'))),
     ];
 
     _pageIndex$ = BehaviorSubject<double>.seeded(0);
