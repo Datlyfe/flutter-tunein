@@ -14,7 +14,6 @@ class BottomPanel extends StatelessWidget {
   final musicService = locator<MusicService>();
   final themeService = locator<ThemeService>();
 
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<MapEntry<PlayerState, Tune>>(
@@ -45,8 +44,8 @@ class BottomPanel extends StatelessWidget {
         final String _artists = getArtists(_currentSong);
 
         return StreamBuilder<List<int>>(
-            stream: themeService.colors$,
-            builder: (context, snapshot) {
+            stream: themeService.color$,
+            builder: (context, AsyncSnapshot<List<int>> snapshot) {
               if (!snapshot.hasData) {
                 return Container(
                   color: MyTheme.bgBottomBar,
@@ -56,7 +55,7 @@ class BottomPanel extends StatelessWidget {
                 );
               }
 
-              final colors = snapshot.data;
+              final List<int> colors = snapshot.data;
 
               return AnimatedContainer(
                   duration: Duration(milliseconds: 500),

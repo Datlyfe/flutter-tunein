@@ -67,7 +67,7 @@ class MusicService {
 
   void updatePlayerState(PlayerState state, Tune song) {
     _playerState$.add(MapEntry(state, song));
-    themeService.updateTheme(song.albumArt);
+    themeService.updateTheme(song);
   }
 
   void updatePosition(Duration duration) {

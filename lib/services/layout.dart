@@ -1,78 +1,38 @@
+import 'package:Tunein/services/pageService.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LayoutService {
-  BehaviorSubject<double> _pageIndex$;
-  BehaviorSubject<double> get pageIndex$ => _pageIndex$;
+  // Main PageView
+  PageController _globalPageController;
+  PageController get globalPageController => _globalPageController;
 
-  List<MapEntry<String, GlobalKey>> _mainNavItems$;
-  List<MapEntry<String, GlobalKey>> get mainNavitems => _mainNavItems$;
+  List<PageService> _pageServices;
+  List<PageService> get pageServices => _pageServices;
 
-  List<MapEntry<String, Icon>> _bottomnavItems;
-  List<MapEntry<String, Icon>> get bottomnavItems => _bottomnavItems;
-
-  List<double> _navSizes;
-  List<double> _cumulativeNavSizes;
-  bool _isSet;
-  int sizenumber;
-  List<double> get navSizes => _navSizes;
-  List<double> get cumulativeNavSizes => _cumulativeNavSizes;
+  // PAGES
+  BehaviorSubject<List<Widget>> _page$;
+  BehaviorSubject<List<Widget>> get page$ => _page$;
 
   LayoutService() {
-    _initStreams();
-  }
-
-  setSize(int index) {
-    if (_isSet) {
-      return;
+    _pageServices = List<PageService>(5);
+    for (var i = 0; i < _pageServices.length; i++) {
+      _pageServices[i] = PageService(i);
     }
-    GlobalKey key = _mainNavItems$[index].value;
-    RenderBox renderBoxRed = key.currentContext.findRenderObject();
-    double width = renderBoxRed.size.width;
-    _navSizes[index] = width;
-    sizenumber = sizenumber + 1;
-    _checkSet();
+    _initGlobalPageView();
   }
 
-  void _checkSet() {
-    if (sizenumber == _mainNavItems$.length) {
-      _isSet = true;
-      _constructCumulative();
-    }
+  void _initGlobalPageView() {
+    _globalPageController = PageController();
   }
 
-  _constructCumulative() {
-    _cumulativeNavSizes.add(0);
-    _cumulativeNavSizes.add(_navSizes[0]);
-    _navSizes.reduce((a, b) {
-      _cumulativeNavSizes.add(a + b);
-      return a + b;
-    });
-  }
+  void updateGlobalPageIndex(int index) {}
 
-  void _initStreams() {
-    List<MapEntry<String, GlobalKey>> defaultNav = [
-      MapEntry("Tracks", GlobalKey()),
-      MapEntry("Favorites", GlobalKey()),
-    ];
-
-    _bottomnavItems = [
-      MapEntry("Library", Icon(IconData(0xec2f, fontFamily: 'boxicons'))),
-      MapEntry("Playlists", Icon(IconData(0xeccd, fontFamily: 'boxicons'))),
-      MapEntry("Search", Icon(IconData(0xeb2e, fontFamily: 'boxicons'))),
-      MapEntry("Equalizer", Icon(IconData(0xea86, fontFamily: 'boxicons'))),
-      MapEntry("Settings", Icon(IconData(0xec2e, fontFamily: 'boxicons'))),
-    ];
-
-    _pageIndex$ = BehaviorSubject<double>.seeded(0);
-    _mainNavItems$ = defaultNav;
-    _isSet = false;
-    sizenumber = 0;
-    _navSizes = List<double>(_mainNavItems$.length);
-    _cumulativeNavSizes = List<double>();
-  }
-
-  void updatePageIndex(double value) async {
-    _pageIndex$.add(value);
+  void changeGlobalPage(int pageIndex) {
+    _globalPageController.animateToPage(
+      pageIndex,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.fastOutSlowIn,
+    );
   }
 }

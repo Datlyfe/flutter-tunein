@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final musicService = locator<MusicService>();
 
   @override
@@ -28,6 +28,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("HOME RENDER");
+    // return Container();
     return Container(
       // padding: EdgeInsets.only(bottom: 85),
       alignment: Alignment.center,

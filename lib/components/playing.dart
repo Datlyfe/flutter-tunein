@@ -52,12 +52,12 @@ class NowPlayingScreenState extends State<NowPlayingScreen> {
 
         return Scaffold(
             body: StreamBuilder<List<int>>(
-                stream: themeService.colors$,
+                stream: themeService.color$,
                 builder: (context, AsyncSnapshot<List<int>> snapshot) {
                   if (!snapshot.hasData) {
                     return Container();
                   }
-                  final colors = snapshot.data;
+                  final List<int> colors = snapshot.data;
                   return AnimatedContainer(
                     padding: MediaQuery.of(context).padding,
                     duration: Duration(milliseconds: 500),

@@ -1,4 +1,5 @@
 import 'package:Tunein/components/gridcell.dart';
+import 'package:Tunein/components/pageheader.dart';
 import 'package:Tunein/globals.dart';
 import 'package:Tunein/models/playerstate.dart';
 import 'package:Tunein/plugins/nano.dart';
@@ -15,6 +16,8 @@ class FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("FAVORITES RENDER");
+
     var size = MediaQuery.of(context).size;
 
     final double itemWidth = size.width / 2;
@@ -25,11 +28,11 @@ class FavoritesPageState extends State<FavoritesPage> {
       color: MyTheme.darkBlack,
       child: Column(
         children: <Widget>[
-          // PageHeader(
-          //   "Favorites",
-          //   "All Tracks",
-          //   MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
-          // ),
+          PageHeader(
+            "Favorites",
+            "All Tracks",
+            MapEntry(IconData(0xeaaf, fontFamily: 'boxicons'), Colors.white),
+          ),
           Expanded(
             child: StreamBuilder<List<Tune>>(
                 stream: musicService.favorites$,
