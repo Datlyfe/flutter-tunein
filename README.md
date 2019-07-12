@@ -8,6 +8,12 @@
 - [x] Play
 - [x] Pause
 - [x] Seek
+- [x] Shuffle
 - [x] favorites
 - [ ] playlists
 - [ ] Search songs
+
+## 📸 ScreenShots
+|                                           |                                          |
+| ----------------------------------------- | -----------------------------------------|
+| <img src="screenshots/2.jpg" width="400"> | <img src="screenshots/1.jpg" width="400">|
