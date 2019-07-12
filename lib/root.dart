@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:Tunein/components/pagenavheader.dart';
 import 'package:Tunein/pages/favorites.dart';
 import 'package:Tunein/pages/home.dart';
+import 'package:Tunein/pages/search.dart';
 import 'package:Tunein/services/layout.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
@@ -103,7 +104,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
                     Expanded(
                       child: PageView(
                         controller: layoutService.globalPageController,
-                        // physics: NeverScrollableScrollPhysics(),
+                        physics: NeverScrollableScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         children: getPagelayout(),
                       ),
@@ -133,7 +134,31 @@ class RootState extends State<Root> with TickerProviderStateMixin {
             child: PageView(
               physics: AlwaysScrollableScrollPhysics(),
               controller: layoutService.pageServices[0].pageViewController,
-              children: [HomePage(), FavoritesPage()],
+              children: [
+                HomePage(),
+                Container(
+                  child: Center(
+                    child: Text(
+                      "ALBUMS",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+                Container(
+                  child: Center(
+                    child: Text(
+                      "ARTISTS",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
         ],
@@ -147,17 +172,43 @@ class RootState extends State<Root> with TickerProviderStateMixin {
             child: PageView(
               physics: AlwaysScrollableScrollPhysics(),
               controller: layoutService.pageServices[1].pageViewController,
-              children: [HomePage(), FavoritesPage()],
+              children: [
+                Container(
+                  child: Center(
+                    child: Text(
+                      "PLAYLISTS",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+                FavoritesPage(),
+              ],
             ),
           )
         ],
       ),
-      Text(
-        "SEARCH PAGE",
-        style: TextStyle(color: Colors.white),
+      SearchPage(),
+      Container(
+        child: Center(
+          child: Text(
+            "EQUILZER",
+            style: TextStyle(
+                color: Colors.white, fontSize: 40, fontWeight: FontWeight.w700),
+          ),
+        ),
       ),
-      Column(),
-      Column(),
+      Container(
+        child: Center(
+          child: Text(
+            "SETTINGS",
+            style: TextStyle(
+                color: Colors.white, fontSize: 40, fontWeight: FontWeight.w700),
+          ),
+        ),
+      )
     ];
   }
 }

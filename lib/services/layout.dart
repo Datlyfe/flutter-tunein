@@ -29,10 +29,14 @@ class LayoutService {
   void updateGlobalPageIndex(int index) {}
 
   void changeGlobalPage(int pageIndex) {
-    _globalPageController.animateToPage(
+    Curve curve = Curves.decelerate;
+    if (pageIndex == 2) {
+      curve = Curves.bounceIn;
+    }
+    _globalPageController.jumpToPage(
       pageIndex,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.fastOutSlowIn,
+      // duration: Duration(milliseconds: 300),
+      // curve: curve,
     );
   }
 }

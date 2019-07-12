@@ -13,7 +13,8 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with TickerProviderStateMixin {
+class HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin<HomePage> {
   final musicService = locator<MusicService>();
 
   @override
@@ -128,6 +129,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class CustomSimulation extends Simulation {

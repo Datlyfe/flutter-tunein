@@ -11,7 +11,8 @@ class FavoritesPage extends StatefulWidget {
   FavoritesPageState createState() => FavoritesPageState();
 }
 
-class FavoritesPageState extends State<FavoritesPage> {
+class FavoritesPageState extends State<FavoritesPage>
+    with AutomaticKeepAliveClientMixin<FavoritesPage> {
   final musicService = locator<MusicService>();
 
   @override
@@ -107,4 +108,8 @@ class FavoritesPageState extends State<FavoritesPage> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
