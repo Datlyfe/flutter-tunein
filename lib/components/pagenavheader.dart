@@ -1,4 +1,5 @@
 import 'package:Tunein/components/pagenavheaderitem.dart';
+import 'package:Tunein/globals.dart';
 import 'package:Tunein/services/layout.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/values/lists.dart';
@@ -14,38 +15,35 @@ class PageNavHeader extends StatefulWidget {
 class _PageNavHeaderState extends State<PageNavHeader> {
   final layoutService = locator<LayoutService>();
 
-  @override 
+  @override
   PageNavHeader get widget => super.widget;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      color: MyTheme.darkBlack,
+      height: 50,
       child: Row(
         children: <Widget>[
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  IconData(0xeaea, fontFamily: 'boxicons'),
-                  size: 30,
-                  color: Colors.white,
-                ),
-              )),
+            padding: const EdgeInsets.only(left: 50),
+          ),
           Expanded(
             child: ListView.builder(
+              padding:
+                  EdgeInsets.only(right: MediaQuery.of(context).size.width),
               physics: NeverScrollableScrollPhysics(),
-              controller: layoutService.pageServices[widget.pageIndex].headerController,
+              controller:
+                  layoutService.pageServices[widget.pageIndex].headerController,
               scrollDirection: Axis.horizontal,
-              itemCount: headerItems[widget.pageIndex].length + 1,
+              itemCount: headerItems[widget.pageIndex].length,
               itemBuilder: (context, int index) {
                 var items = headerItems[widget.pageIndex];
-                if (index == items.length) {
-                  return Container(
-                    width: 1000,
-                  );
-                }
+                // if (index == items.length) {
+                //   return Container(
+                //     width: 2000,
+                //   );
+                // }
                 return PageTitle(
                   pageIndex: widget.pageIndex,
                   index: index,

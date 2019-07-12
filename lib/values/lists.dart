@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
 
-class PageNavItem {
-  String title;
-  GlobalKey key;
-  PageNavItem(this.title, this.key);
-}
-
-final List<MapEntry<String, GlobalKey>> headerNavBarItems = [
-  MapEntry("Tracks", GlobalKey()),
-  MapEntry("Favorites", GlobalKey()),
-];
-
 final Map<int, List<MapEntry<String, GlobalKey>>> headerItems = {
   0: [
     MapEntry(
@@ -18,18 +7,18 @@ final Map<int, List<MapEntry<String, GlobalKey>>> headerItems = {
       GlobalKey(),
     ),
     MapEntry(
-      "Albums",
+      "Artists",
       GlobalKey(),
     ),
     MapEntry(
-      "Artists",
+      "Albums",
       GlobalKey(),
     )
   ],
-  1: [MapEntry("Playlists", GlobalKey()), MapEntry("Favorites", GlobalKey())],
-  2: [MapEntry("Artists", GlobalKey()), MapEntry("Done", GlobalKey())],
-  3: [MapEntry("Tracks", GlobalKey()), MapEntry("Tracks", GlobalKey())],
-  4: [MapEntry("Tracks", GlobalKey()), MapEntry("Tracks", GlobalKey())]
+  1: [
+    MapEntry("Playlists", GlobalKey()),
+    MapEntry("Favorites", GlobalKey()),
+  ],
 };
 
 final List<MapEntry<String, Icon>> bottomNavBarItems = [

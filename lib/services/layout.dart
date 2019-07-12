@@ -15,7 +15,7 @@ class LayoutService {
   BehaviorSubject<List<Widget>> get page$ => _page$;
 
   LayoutService() {
-    _pageServices = List<PageService>(5);
+    _pageServices = List<PageService>(2);
     for (var i = 0; i < _pageServices.length; i++) {
       _pageServices[i] = PageService(i);
     }
@@ -23,20 +23,18 @@ class LayoutService {
   }
 
   void _initGlobalPageView() {
-    _globalPageController = PageController();
+    _globalPageController = PageController(initialPage: 1);
   }
 
   void updateGlobalPageIndex(int index) {}
 
   void changeGlobalPage(int pageIndex) {
-    Curve curve = Curves.decelerate;
-    if (pageIndex == 2) {
-      curve = Curves.bounceIn;
-    }
-    _globalPageController.jumpToPage(
+    Curve curve = Curves.fastOutSlowIn;
+
+    _globalPageController.animateToPage(
       pageIndex,
-      // duration: Duration(milliseconds: 300),
-      // curve: curve,
+      duration: Duration(milliseconds: 200),
+      curve: curve,
     );
   }
 }

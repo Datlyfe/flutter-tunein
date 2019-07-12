@@ -7,14 +7,13 @@ import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:math' as math;
 
-class HomePage extends StatefulWidget {
-  HomePageState createState() => HomePageState();
+class TracksPage extends StatefulWidget {
+  _TracksPageState createState() => _TracksPageState();
 }
 
-class HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin<HomePage> {
+class _TracksPageState extends State<TracksPage>
+    with AutomaticKeepAliveClientMixin<TracksPage> {
   final musicService = locator<MusicService>();
 
   @override
@@ -29,10 +28,7 @@ class HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    print("HOME RENDER");
-    // return Container();
     return Container(
-      // padding: EdgeInsets.only(bottom: 85),
       alignment: Alignment.center,
       color: MyTheme.darkBlack,
       child: Column(
@@ -54,7 +50,6 @@ class HomePageState extends State<HomePage>
                   padding: EdgeInsets.all(0),
                   shrinkWrap: true,
                   itemExtent: 62,
-                  // physics: CustomScrollPhysics(),
                   physics: AlwaysScrollableScrollPhysics(),
                   itemCount: _songs.length + 1,
                   itemBuilder: (context, index) {
@@ -131,62 +126,5 @@ class HomePageState extends State<HomePage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-}
-
-class CustomSimulation extends Simulation {
-  final double initPosition;
-  final double velocity;
-  final double maxPos;
-
-  CustomSimulation({this.initPosition, this.maxPos, this.velocity});
-
-  @override
-  double x(double time) {
-    var max = math.max(math.min(initPosition, 0.0),
-        math.min(initPosition + velocity * time, maxPos));
-
-    // print(max.toString());
-
-    return max;
-  }
-
-  @override
-  double dx(double time) {
-    // print(velocity.toString());
-    return velocity;
-  }
-
-  @override
-  bool isDone(double time) {
-    return false;
-  }
-}
-
-class CustomScrollPhysics extends ScrollPhysics {
-  const CustomScrollPhysics({ScrollPhysics parent}) : super(parent: parent);
-
-  @override
-  CustomScrollPhysics applyTo(ScrollPhysics ancestor) {
-    return CustomScrollPhysics(parent: buildParent(ancestor));
-  }
-
-  // @override
-  // ScrollPhysics applyTo(ScrollPhysics ancestor) {
-  //   return CustomScrollPhysics();
-  // }
-
-  @override
-  bool shouldAcceptUserOffset(ScrollMetrics position) => true;
-
-  @override
-  Simulation createBallisticSimulation(
-      ScrollMetrics position, double velocity) {
-    return CustomSimulation(
-      initPosition: position.pixels,
-      maxPos: position.maxScrollExtent,
-      velocity: velocity,
-    );
-  }
 }

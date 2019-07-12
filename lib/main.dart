@@ -1,3 +1,4 @@
+import 'package:Tunein/globals.dart';
 import 'package:Tunein/plugins/nano.dart';
 import 'package:Tunein/root.dart';
 import 'package:Tunein/services/locator.dart';
@@ -22,6 +23,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: MyTheme.darkBlack
+        )
+      ),
       debugShowCheckedModeBanner: false,
       home: Root(),
     );

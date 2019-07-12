@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'package:Tunein/components/pagenavheader.dart';
-import 'package:Tunein/pages/favorites.dart';
-import 'package:Tunein/pages/home.dart';
-import 'package:Tunein/pages/search.dart';
+import 'package:Tunein/pages/collection/collection.page.dart';
+import 'package:Tunein/pages/library/library.page.dart';
 import 'package:Tunein/services/layout.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
-import 'package:Tunein/values/lists.dart';
 import 'package:flutter/material.dart';
 import 'package:Tunein/components/playing.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +11,6 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'components/bottomPanel.dart';
 import 'components/bottomnavbar.dart';
 import 'globals.dart';
-import 'dart:math' as math;
 
 enum StartupState { Busy, Success, Error }
 
@@ -72,6 +68,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
         }
       },
       child: Scaffold(
+        bottomNavigationBar: BottomNavBar(),
         backgroundColor: MyTheme.darkBlack,
         body: StreamBuilder<StartupState>(
           stream: _startupStatus.stream,
@@ -95,25 +92,46 @@ class RootState extends State<Root> with TickerProviderStateMixin {
               collapsed: BottomPanel(),
               body: Theme(
                 data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Container(
-                      padding: MediaQuery.of(context).padding,
-                    ),
-                    Expanded(
-                      child: PageView(
-                        controller: layoutService.globalPageController,
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        children: getPagelayout(),
+                child: Padding(
+                  padding: MediaQuery.of(context).padding,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Expanded(
+                            child: PageView(
+                              controller: layoutService.globalPageController,
+                              physics: NeverScrollableScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                CollectionPage(),
+                                LibraryPage(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    BottomNavBar(),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                          color: MyTheme.darkBlack,
+                          height: 50,
+                          width: 50,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              IconData(0xeaea, fontFamily: 'boxicons'),
+                              size: 28,
+                              color: Colors.white54,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -121,94 +139,5 @@ class RootState extends State<Root> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  List<Widget> getPagelayout() {
-    return [
-      Column(
-        children: <Widget>[
-          PageNavHeader(
-            pageIndex: 0,
-          ),
-          Flexible(
-            child: PageView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: layoutService.pageServices[0].pageViewController,
-              children: [
-                HomePage(),
-                Container(
-                  child: Center(
-                    child: Text(
-                      "ALBUMS",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Center(
-                    child: Text(
-                      "ARTISTS",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-      Column(
-        children: <Widget>[
-          PageNavHeader(
-            pageIndex: 1,
-          ),
-          Flexible(
-            child: PageView(
-              physics: AlwaysScrollableScrollPhysics(),
-              controller: layoutService.pageServices[1].pageViewController,
-              children: [
-                Container(
-                  child: Center(
-                    child: Text(
-                      "PLAYLISTS",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-                FavoritesPage(),
-              ],
-            ),
-          )
-        ],
-      ),
-      SearchPage(),
-      Container(
-        child: Center(
-          child: Text(
-            "EQUILZER",
-            style: TextStyle(
-                color: Colors.white, fontSize: 40, fontWeight: FontWeight.w700),
-          ),
-        ),
-      ),
-      Container(
-        child: Center(
-          child: Text(
-            "SETTINGS",
-            style: TextStyle(
-                color: Colors.white, fontSize: 40, fontWeight: FontWeight.w700),
-          ),
-        ),
-      )
-    ];
   }
 }

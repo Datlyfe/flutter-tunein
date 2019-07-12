@@ -11,46 +11,78 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: MyTheme.darkBlack,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(color: Color(0xff0E0E0E), boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(.4),
-                    spreadRadius: 5,
-                    blurRadius: 5,
-                    offset: Offset(0, 2))
-              ]),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
-              height: 65,
-              child: Container(
-                decoration: BoxDecoration(
-                    // color: MyTheme.darkRed,
-                    // borderRadius: BorderRadius.circular(6),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Padding(
+            padding: MediaQuery.of(context).padding,
+          ),
+          Material(
+            child: Container(
+              height: 70,
+              decoration: BoxDecoration(
+                color: Color(0xff0E0E0E),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(.5),
+                    spreadRadius: 10,
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
+                  )
+                ],
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      iconSize: 18,
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
                     ),
-                child: TextField(
-                  cursorColor: MyTheme.darkRed,
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  textAlign: TextAlign.start,
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(
-                      Icons.search,
-                      color: Colors.white,
+                    Expanded(
+                      child: TextField(
+                        autofocus: false,
+                        cursorColor: MyTheme.darkRed,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        textAlign: TextAlign.start,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: MyTheme.darkBlack,
+                          hintText: "TRACK, ALBUM, ARTIST",
+                          hintStyle:
+                              TextStyle(color: Colors.white54, fontSize: 18),
+                          border: InputBorder.none,
+                        ),
+                      ),
                     ),
-                    filled: true,
-                    fillColor: MyTheme.darkBlack,
-                    hintText: "TRACK, ALBUM, ARTIST",
-                    // contentPadding: EdgeInsets.all(16),
-                    hintStyle: TextStyle(color: Colors.white54),
-                    border:InputBorder.none
-                  ),
+                    IconButton(
+                      onPressed: () {},
+                      iconSize: 18,
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            )
-          ],
-        ));
+            ),
+          ),
+          Expanded(
+            child: Container(color: MyTheme.darkBlack),
+          ),
+        ],
+      ),
+    );
   }
 }
