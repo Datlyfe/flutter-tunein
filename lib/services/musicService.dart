@@ -106,7 +106,6 @@ class MusicService {
   }
 
   MapEntry<Tune, Tune> getNextPrevSong(Tune _currentSong) {
-    print(_currentSong.id);
     final bool _isShuffle = _playback$.value.contains(Playback.shuffle);
     final List<Tune> _playlist =
         _isShuffle ? _playlist$.value.value : _playlist$.value.key;
@@ -222,7 +221,6 @@ class MusicService {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     List<String> _savedStrings = _prefs.getStringList("tunes") ?? [];
     List<Tune> _songs = [];
-    print(_savedStrings.length);
     for (String data in _savedStrings) {
       final Tune song = _decodeSongFromJson(data);
       _songs.add(song);

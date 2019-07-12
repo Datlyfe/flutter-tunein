@@ -1,25 +1,18 @@
-import 'package:Tunein/components/pagenavheader.dart';
-import 'package:Tunein/pages/favorites.dart';
-import 'package:Tunein/pages/home.dart';
 import 'package:flutter/material.dart';
 
-class PageNavItem {
-  String title;
-  GlobalKey key;
-  PageNavItem(this.title, this.key);
-}
-
-final List<MapEntry<String, GlobalKey>> headerNavBarItems = [
-  MapEntry("Tracks", GlobalKey()),
-  MapEntry("Favorites", GlobalKey()),
-];
-
 final Map<int, List<MapEntry<String, GlobalKey>>> headerItems = {
-  0: [MapEntry("Tracks", GlobalKey()), MapEntry("Favorites", GlobalKey())],
+  0: [
+    MapEntry("Tracks", GlobalKey()),
+    MapEntry("Albums", GlobalKey()),
+    MapEntry("Artists", GlobalKey())
+  ],
   1: [MapEntry("Folders", GlobalKey()), MapEntry("Albums", GlobalKey())],
   2: [MapEntry("Artists", GlobalKey()), MapEntry("Done", GlobalKey())],
-  3: [MapEntry("Tracks", GlobalKey()), MapEntry("Tracks", GlobalKey())],
-  4: [MapEntry("Tracks", GlobalKey()), MapEntry("Tracks", GlobalKey())]
+  3: [
+    MapEntry("Equlizer", GlobalKey()),
+    MapEntry("Sound Effects", GlobalKey())
+  ],
+  4: [MapEntry("Settings", GlobalKey()), MapEntry("Other", GlobalKey())]
 };
 
 final List<MapEntry<String, Icon>> bottomNavBarItems = [
@@ -29,4 +22,3 @@ final List<MapEntry<String, Icon>> bottomNavBarItems = [
   MapEntry("Equalizer", Icon(IconData(0xea86, fontFamily: 'boxicons'))),
   MapEntry("Settings", Icon(IconData(0xec2e, fontFamily: 'boxicons'))),
 ];
-

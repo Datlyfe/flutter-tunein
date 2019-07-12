@@ -7,16 +7,15 @@ import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
 import 'package:flutter/material.dart';
 
-class FavoritesPage extends StatefulWidget {
-  FavoritesPageState createState() => FavoritesPageState();
+class Favorites extends StatefulWidget {
+  FavoritesState createState() => FavoritesState();
 }
 
-class FavoritesPageState extends State<FavoritesPage> {
+class FavoritesState extends State<Favorites> {
   final musicService = locator<MusicService>();
 
   @override
   Widget build(BuildContext context) {
-
     var size = MediaQuery.of(context).size;
 
     final double itemWidth = size.width / 2;

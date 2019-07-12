@@ -14,7 +14,20 @@ class LayoutService {
   BehaviorSubject<List<Widget>> _page$;
   BehaviorSubject<List<Widget>> get page$ => _page$;
 
+  List<int> _navigationStack;
+  List<int> get navigationStack => _navigationStack;
+
+  void pushtoStack(int index) {
+    _navigationStack.add(index);
+  }
+
+  void popStack() {
+    _navigationStack.removeLast();
+  }
+
   LayoutService() {
+    _navigationStack = List<int>();
+    _navigationStack.add(0);
     _pageServices = List<PageService>(5);
     for (var i = 0; i < _pageServices.length; i++) {
       _pageServices[i] = PageService(i);

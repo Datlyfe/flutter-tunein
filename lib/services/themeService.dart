@@ -30,7 +30,6 @@ class ThemeService {
       return;
     }
 
-    print("GETTING COLORS ");
     final colors =
         await _androidAppRetain.invokeMethod("getColor", {"path": path});
     List<int> _colors = List<int>();

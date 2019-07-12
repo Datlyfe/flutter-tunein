@@ -77,7 +77,6 @@ class Nano {
     if (sdPath == null) {
       print("NO SDCARD ON THIS DEVICE");
     } else {
-      print(sdPath);
       // TODO: read files from sd card
     }
   }
@@ -85,8 +84,7 @@ class Nano {
   Future getAllMetaData() async {
     for (var track in _musicFiles) {
       var data = await getFileMetaData(track);
-      // updateLoadingTrack(track, _musicFiles.indexOf(track), _musicFiles.length);
-      // print(track);
+      // TODO : loadinf track
       if (data[2] != null) {
         if (data[2] is List<int>) {
           var digest = sha1.convert(data[2]).toString();

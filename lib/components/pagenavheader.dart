@@ -1,4 +1,5 @@
 import 'package:Tunein/components/pagenavheaderitem.dart';
+import 'package:Tunein/globals.dart';
 import 'package:Tunein/services/layout.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/values/lists.dart';
@@ -20,6 +21,7 @@ class _PageNavHeaderState extends State<PageNavHeader> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: MyTheme.darkBlack,
       height: 60,
       child: Row(
         children: <Widget>[
