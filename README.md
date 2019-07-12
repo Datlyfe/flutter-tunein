@@ -1,3 +1,13 @@
-# flutter-tunein
+# 🎧 Flutter Music Player [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-Flutter training projet XD
+
+## Todos
+
+- [x] Retrieve songs
+- [ ] Retrieve from SD
+- [x] Play
+- [x] Pause
+- [x] Seek
+- [x] favorites
+- [ ] playlists
+- [ ] Search songs
