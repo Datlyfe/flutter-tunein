@@ -55,7 +55,7 @@ class PageTitle extends StatelessWidget {
             title,
             style: TextStyle(
               color: Colors.white.withOpacity(opacity),
-              fontSize: 25,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),

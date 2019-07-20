@@ -32,12 +32,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
               backgroundColor: MyTheme.bgBottomBar,
               icon: item.value,
               title: Padding(
-                padding: const EdgeInsets.all(2.0),
+                padding: const EdgeInsets.only(top :5.0),
                 child: Text(
                   item.key.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: 10,
                   ),
                 ),
               )))
@@ -62,11 +62,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
   _handleTap(int index) {
     switch (index) {
       case 0:
-        layoutService.changeGlobalPage(1);
+        layoutService.changeGlobalPage(index);
         _setBarIndex(index);
         break;
       case 1:
-        layoutService.changeGlobalPage(0);
+        layoutService.changeGlobalPage(index);
         _setBarIndex(index);
         break;
       case 2:

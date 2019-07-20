@@ -4,11 +4,9 @@ import 'package:Tunein/pages/library/library.page.dart';
 import 'package:Tunein/services/layout.dart';
 import 'package:Tunein/services/locator.dart';
 import 'package:Tunein/services/musicService.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:Tunein/components/playing.dart';
 import 'package:flutter/services.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'components/bottomPanel.dart';
 import 'components/bottomnavbar.dart';
 import 'globals.dart';
 
@@ -23,21 +21,16 @@ class RootState extends State<Root> with TickerProviderStateMixin {
   final layoutService = locator<LayoutService>();
   final _androidAppRetain = MethodChannel("android_app_retain");
 
-  PanelController _panelController;
-
   final StreamController<StartupState> _startupStatus =
       StreamController<StartupState>();
   @override
   void initState() {
-    _panelController = PanelController();
-
     loadFiles();
     super.initState();
   }
 
   @override
   void dispose() {
-    _panelController.close();
     _startupStatus.close();
     super.dispose();
   }
@@ -60,8 +53,8 @@ class RootState extends State<Root> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (!_panelController.isPanelClosed()) {
-          _panelController.close();
+        if (!layoutService.globalPanelController.isPanelClosed()) {
+          layoutService.globalPanelController.close();
         } else {
           _androidAppRetain.invokeMethod("sendToBackground");
           return Future.value(false);
@@ -81,57 +74,55 @@ class RootState extends State<Root> with TickerProviderStateMixin {
               return Container();
             }
 
-            return SlidingUpPanel(
-              panel: NowPlayingScreen(),
-              controller: _panelController,
-              maxHeight: MediaQuery.of(context).size.height,
-              minHeight: 60,
-              backdropEnabled: true,
-              backdropOpacity: 0.5,
-              parallaxEnabled: true,
-              collapsed: BottomPanel(),
-              body: Theme(
-                data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
-                child: Padding(
-                  padding: MediaQuery.of(context).padding,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
+            return Theme(
+              data: Theme.of(context).copyWith(accentColor: MyTheme.darkRed),
+              child: Padding(
+                padding: MediaQuery.of(context).padding,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.expand,
                         children: <Widget>[
-                          Expanded(
-                            child: PageView(
-                              controller: layoutService.globalPageController,
-                              physics: NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                CollectionPage(),
-                                LibraryPage(),
-                              ],
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(
+                                child: PageView(
+                                  controller:
+                                      layoutService.globalPageController,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    LibraryPage(),
+                                    CollectionPage(),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              color: MyTheme.darkBlack,
+                              height: 50,
+                              width: 53,
+                              child: InkWell(
+                                onTap: () {},
+                                child: Icon(
+                                  IconData(0xeae9, fontFamily: 'boxicons'),
+                                  size: 22,
+                                  color: Colors.white54,
+                                ),
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        child: Container(
-                          color: MyTheme.darkBlack,
-                          height: 50,
-                          width: 50,
-                          child: Container(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              IconData(0xeaea, fontFamily: 'boxicons'),
-                              size: 28,
-                              color: Colors.white54,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

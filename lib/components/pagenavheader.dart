@@ -26,7 +26,7 @@ class _PageNavHeaderState extends State<PageNavHeader> {
       child: Row(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 53),
           ),
           Expanded(
             child: ListView.builder(
