@@ -78,7 +78,8 @@ class Nano {
       print("NO SDCARD ON THIS DEVICE");
     } else {
       print(sdPath);
-      // TODO: read files from sd card
+      String sdCardDir = Directory(sdPath).parent.parent.parent.parent.path;
+      await readExtDir(Directory(sdCardDir));
     }
   }
 

@@ -30,7 +30,7 @@ class MyCard extends StatelessWidget {
 
         return Container(
           color: Colors.transparent,
-          padding: EdgeInsets.symmetric( vertical: 5),
+          padding: EdgeInsets.symmetric(vertical: 5),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -61,7 +61,9 @@ class MyCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              _song.title,
+                              (_song.title == null)
+                                  ? "Unknon Title"
+                                  : _song.title,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 13.5,
@@ -71,7 +73,9 @@ class MyCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            _song.artist,
+                            (_song.artist == null)
+                                ? "Unknown Artist"
+                                : _song.artist,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 12.5,

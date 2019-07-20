@@ -13,6 +13,7 @@ class MyTheme {
 
 class MyUtils {
   static String getArtists(artists) {
+    if(artists == null) return "Unknow Artist";
     return artists.split(";").reduce((String a, String b) {
       return a + " & " + b;
     });

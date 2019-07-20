@@ -72,6 +72,7 @@ class BottomPanel extends StatelessWidget {
   }
 
   String getArtists(Tune song) {
+    if(song.artist == null) return "Unknow Artist";
     return song.artist.split(";").reduce((String a, String b) {
       return a + " & " + b;
     });
